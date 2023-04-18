@@ -1,0 +1,37 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: 'Alkatra', cursive;
+}
+/*Daty w kartach projektu*/
+.date-card {
+    border: 1px solid #ddd;
+    width: 200px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    margin:15px;
+}
+.date-card .day {
+    font-size: 48px;
+    margin: 0px 10px;
+    color: #2ab6b6;
+}
+.date-card .month {
+    font-weight: bold;
+}
