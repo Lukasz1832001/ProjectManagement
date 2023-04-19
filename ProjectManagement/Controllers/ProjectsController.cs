@@ -31,8 +31,11 @@ namespace ProjectManagement.Controllers
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            List<ProjectTask> tasks = _context.Tasks.Where(x => x.ProjectId == id).ToList();
+            List<ProjectTask> tasks = _context.Tasks.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Tasks = tasks;
+            List<Comment> comments = _context.Comments.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
+            ViewBag.Comments = comments;
+
             if (id == null || _context.Projects == null)
             {
                 return NotFound();

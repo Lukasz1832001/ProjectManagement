@@ -14,6 +14,6 @@ namespace ProjectManagement.Models
         
         //relations
         public List<ProjectTask> Tasks { get; set; }
-        
+        public List<Comment> Comments { get; set; }
     }
 }

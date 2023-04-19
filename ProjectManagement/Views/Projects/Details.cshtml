@@ -82,12 +82,108 @@
                         @item.Project.Name
                     </td>
                     <td>
-                        @item.UserId
+                        @item.User.UserName
                     </td>
                     <td>
                         <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
                         <a asp-controller="ProjectTasks" asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
                         <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <!--Comment cards-->
+
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="" style="width:100%;">
+                @foreach (var item in ViewBag.Comments)
+                {
+                    <div class="card" style="margin-bottom:15px;">
+                        <div class="card-body">
+                            <div class="d-flex flex-start align-items-center">
+                                Tutaj profilowe
+                                <!--
+                                <img class="rounded-circle shadow-1-strong me-3"
+                                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
+                                                                    height="60" />
+                                -->
+                               
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
+                                    <p class="text-muted small mb-0">
+                                        @item.CreateDate
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p class="mt-3 mb-4 pb-2">
+                                @item.Content
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                <div class="card-footer py-3 border-0" style="background-color: lightgray;">
+                    <div class="d-flex flex-start w-100">
+                        Tutaj zdjęcie profilowe
+                        
+                        <!--
+                            <img class="rounded-circle shadow-1-strong me-3"
+                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
+                             height="40" />
+                        -->
+                        
+                        <div class="form-outline w-100">
+                            <textarea name="commentContent" class="form-control" id="commentTextArea" rows="4"
+                                      style="background: #fff;"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="d-flex justify-content-end mt-2">
+                        <a asp-controller="Comments" asp-action="Create" type="button" class="btn btn-primary btn-sm">Post comment</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!--Comments-->
+    <a asp-controller="Comments" asp-action="Create">Create Comment</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Treść
+                </th>
+                <th>
+                    Data utworzenia
+                </th>
+                <th>
+                    UserName
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Comments)
+            {
+                <tr>
+                    <td>
+                        @item.Content
+                    </td>
+                    <td>
+                        @item.CreateDate
+                    </td>
+                    <td>
+                        @item.User.UserName
+                    </td>
+                    <td>
+                        <a asp-controller="Comments" asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
+                        <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
                     </td>
                 </tr>
             }

@@ -59,6 +59,9 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            
+            [Display(Name = "User Picture")]
+            public byte[] Picture { get; set; }
         }
 
         private async Task LoadAsync(User user)
@@ -66,11 +69,14 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
+            var Picture = user.Picture;
+
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Picture = Picture
             };
         }
 
@@ -89,6 +95,17 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    user.Picture = dataStream.ToArray();
+                }
+                await _userManager.UpdateAsync(user);
+            }
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");

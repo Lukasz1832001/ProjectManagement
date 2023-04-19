@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
 using System.Diagnostics;
 
@@ -7,14 +8,17 @@ namespace ProjectManagement.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<User> _user;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<User> user)
         {
             _logger = logger;
+            _user = user;
         }
 
         public IActionResult Index()
         {
+            ViewBag.User = _user.GetUserId(HttpContext.User);
             return View();
         }
 

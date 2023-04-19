@@ -6,8 +6,9 @@ namespace ProjectManagement.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public byte[]? Picture { get; set; }
 
         //relation
-        public List<ProjectTask> Tasks { get; set; }
+        public List<ProjectTask> Tasks { get; set; }        
     }
 }

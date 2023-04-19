@@ -11,6 +11,8 @@ namespace ProjectManagement.Models
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        //relations
         public int ProjectId { get; set; }
         public Project Project { get; set; }
         
