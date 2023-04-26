@@ -327,6 +327,42 @@ namespace ProjectManagement.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.Risk", b =>
+                {
+                    b.Property<int>("RiskId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RiskId"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Influence")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Probability")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reaction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RiskId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Risks");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -434,9 +470,22 @@ namespace ProjectManagement.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.Risk", b =>
+                {
+                    b.HasOne("ProjectManagement.Models.Project", "Project")
+                        .WithMany("Risks")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Risks");
 
                     b.Navigation("Tasks");
                 });

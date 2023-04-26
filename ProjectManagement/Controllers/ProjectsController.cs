@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +15,12 @@ namespace ProjectManagement.Controllers
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _context;
-        
-       
-        public ProjectsController(AppDbContext context)
+        private readonly UserManager<User> _user;
+
+        public ProjectsController(AppDbContext context, UserManager<User> user)
         {
             _context = context;
+            _user = user;
         }
 
         // GET: Projects
@@ -29,10 +32,14 @@ namespace ProjectManagement.Controllers
         }
 
         // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             List<ProjectTask> tasks = _context.Tasks.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Tasks = tasks;
+
+            List<Risk> risks = _context.Risks.Where(x => x.ProjectId == id).ToList();
+            ViewBag.Risks = risks;
+
             List<Comment> comments = _context.Comments.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Comments = comments;
 
@@ -48,6 +55,29 @@ namespace ProjectManagement.Controllers
                 return NotFound();
             }  
             return View(project);
+        }
+        //Add comments
+        [HttpPost]
+        [Authorize]
+        public ActionResult AddComment(int projectId, string commentText)
+        {
+            var project = _context.Projects.Find(projectId);
+            if (project != null)
+            {
+                var userId = _user.GetUserId(HttpContext.User);
+                var comment = new Comment
+                {
+                    Project = project,
+                    UserId = userId,
+                    Content = commentText,
+                    CreateDate = DateTime.Now
+                };
+
+                _context.Comments.Add(comment);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Details", new { id = projectId });
         }
 
         // GET: Projects/Create

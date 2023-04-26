@@ -36,6 +36,8 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
     </dl>
+
+    <!--Tasks-->
     <a asp-controller="ProjectTasks" asp-action="Create">Create Task</a>
 
     <table class="table">
@@ -93,6 +95,66 @@
             }
         </tbody>
     </table>
+
+    <!--Risk-->
+    <a asp-controller="Risks" asp-action="Create">Create Risk</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Probability
+                </th>
+                <th>
+                    Influence
+                </th>
+                <th>
+                    Reaction
+                </th>
+                <th>
+                    ProjectId
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Risks)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.Influence
+                    </td>
+                    <td>
+                        @item.Influence
+                    </td>
+                    <td>
+                        @item.Reaction
+                    </td>
+                    <td>
+                        @item.ProjectId
+                    </td>
+                    <td>
+                        <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId">Edit</a> |
+                        <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId">Details</a> |
+                        <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
     <!--Comment cards-->
 
     <div class="container">
@@ -103,13 +165,12 @@
                     <div class="card" style="margin-bottom:15px;">
                         <div class="card-body">
                             <div class="d-flex flex-start align-items-center">
-                                Tutaj profilowe
                                 <!--
                                 <img class="rounded-circle shadow-1-strong me-3"
                                                                     src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
                                                                     height="60" />
                                 -->
-                               
+
                                 <div>
                                     <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
                                     <p class="text-muted small mb-0">
@@ -125,72 +186,28 @@
                     </div>
                 }
 
-                <div class="card-footer py-3 border-0" style="background-color: lightgray;">
-                    <div class="d-flex flex-start w-100">
-                        Tutaj zdjęcie profilowe
-                        
-                        <!--
-                            <img class="rounded-circle shadow-1-strong me-3"
-                             src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="40"
-                             height="40" />
-                        -->
-                        
-                        <div class="form-outline w-100">
-                            <textarea name="commentContent" class="form-control" id="commentTextArea" rows="4"
-                                      style="background: #fff;"></textarea>
+                <div class="card-body py-3 border-0" style="background-color: lightgray;">
+                    @using (Html.BeginForm("AddComment", "Projects"))
+                    {
+                        @Html.Hidden("projectId", Model.ProjectId)
+
+                        <div class="form-group">
+                            @Html.Label("commentText", "Komentarz")
+                            @Html.TextArea("commentText", null, new { @class = "form-control" })
                         </div>
 
-                    </div>
-                    <div class="d-flex justify-content-end mt-2">
-                        <a asp-controller="Comments" asp-action="Create" type="button" class="btn btn-primary btn-sm">Post comment</a>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
+                    }
+
                 </div>
 
             </div>
         </div>
     </div>
 
-    <!--Comments-->
-    <a asp-controller="Comments" asp-action="Create">Create Comment</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Treść
-                </th>
-                <th>
-                    Data utworzenia
-                </th>
-                <th>
-                    UserName
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.Comments)
-            {
-                <tr>
-                    <td>
-                        @item.Content
-                    </td>
-                    <td>
-                        @item.CreateDate
-                    </td>
-                    <td>
-                        @item.User.UserName
-                    </td>
-                    <td>
-                        <a asp-controller="Comments" asp-action="Details" asp-route-id="@item.CommentId">Details</a> |
-                        <a asp-controller="Comments" asp-action="Delete" asp-route-id="@item.CommentId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ProjectId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+

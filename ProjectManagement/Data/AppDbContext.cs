@@ -15,5 +15,17 @@ namespace ProjectManagement.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Risk> Risks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Comment>()
+                .HasOne(c => c.Project)
+                .WithMany(p => p.Comments)
+                .HasForeignKey(c => c.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

@@ -1,7 +1,10 @@
-﻿namespace ProjectManagement.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ProjectManagement.Models
 {
     public class Comment
     {
+        [Key]
         public int CommentId { get; set; }
         public string Content { get; set; }
         public DateTime CreateDate { get; set; }
