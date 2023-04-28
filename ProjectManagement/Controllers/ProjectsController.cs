@@ -26,9 +26,9 @@ namespace ProjectManagement.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-              return _context.Projects != null ? 
-                          View(await _context.Projects.ToListAsync()) :
-                          Problem("Entity set 'AppDbContext.Projects'  is null.");
+            return _context.Projects != null ?
+                        View(await _context.Projects.ToListAsync()) :
+                        Problem("Entity set 'AppDbContext.Projects'  is null.");
         }
 
         // GET: Projects/Details/5
@@ -43,7 +43,7 @@ namespace ProjectManagement.Controllers
             List<Comment> comments = _context.Comments.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Comments = comments;
 
-            if (id == null || _context.Projects == null)
+            if (_context.Projects == null)
             {
                 return NotFound();
             }
@@ -53,7 +53,7 @@ namespace ProjectManagement.Controllers
             if (project == null)
             {
                 return NotFound();
-            }  
+            }
             return View(project);
         }
         //Add comments
@@ -61,6 +61,7 @@ namespace ProjectManagement.Controllers
         [Authorize]
         public ActionResult AddComment(int projectId, string commentText)
         {
+
             var project = _context.Projects.Find(projectId);
             if (project != null)
             {
@@ -78,7 +79,9 @@ namespace ProjectManagement.Controllers
             }
 
             return RedirectToAction("Details", new { id = projectId });
+
         }
+       
 
         // GET: Projects/Create
         public IActionResult Create()
@@ -179,14 +182,14 @@ namespace ProjectManagement.Controllers
             {
                 _context.Projects.Remove(project);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProjectExists(int id)
         {
-          return (_context.Projects?.Any(e => e.ProjectId == id)).GetValueOrDefault();
+            return (_context.Projects?.Any(e => e.ProjectId == id)).GetValueOrDefault();
         }
     }
 }

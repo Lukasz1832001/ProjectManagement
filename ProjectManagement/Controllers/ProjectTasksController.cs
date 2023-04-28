@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,17 +15,21 @@ namespace ProjectManagement.Controllers
     public class ProjectTasksController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly UserManager<User> _user;
 
-        public ProjectTasksController(AppDbContext context)
+        public ProjectTasksController(AppDbContext context, UserManager<User> user)
         {
             _context = context;
+            _user = user;   
         }
 
         // GET: ProjectTasks
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Tasks.Include(p => p.Project);
-            return View(await appDbContext.ToListAsync());
+            string userId = _user.GetUserId(HttpContext.User);
+            var results = _context.Tasks.Where(x => x.UserId == userId).Include(p => p.Project).Include(u => u.User).ToList();
+            return View(results);
         }
 
         // GET: ProjectTasks/Details/5

@@ -6,6 +6,7 @@ namespace ProjectManagement.Models
     {
         [Key]
         public int CommentId { get; set; }
+        [Required(ErrorMessage = "Treść komentarza jest wymagana")]
         public string Content { get; set; }
         public DateTime CreateDate { get; set; }
 
