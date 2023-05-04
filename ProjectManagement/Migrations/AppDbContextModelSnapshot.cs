@@ -363,6 +363,29 @@ namespace ProjectManagement.Migrations
                     b.ToTable("Risks");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.Team", b =>
+                {
+                    b.Property<int>("TeamId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeamId"));
+
+                    b.Property<string>("LeaderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TeamId");
+
+                    b.HasIndex("LeaderId");
+
+                    b.ToTable("Teams");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -377,6 +400,11 @@ namespace ProjectManagement.Migrations
 
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("TeamId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -481,6 +509,24 @@ namespace ProjectManagement.Migrations
                     b.Navigation("Project");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.Team", b =>
+                {
+                    b.HasOne("ProjectManagement.Models.User", "Leader")
+                        .WithMany("Teams")
+                        .HasForeignKey("LeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Leader");
+                });
+
+            modelBuilder.Entity("ProjectManagement.Models.User", b =>
+                {
+                    b.HasOne("ProjectManagement.Models.Team", null)
+                        .WithMany("Users")
+                        .HasForeignKey("TeamId");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
                 {
                     b.Navigation("Comments");
@@ -490,9 +536,16 @@ namespace ProjectManagement.Migrations
                     b.Navigation("Tasks");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.Team", b =>
+                {
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.User", b =>
                 {
                     b.Navigation("Tasks");
+
+                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

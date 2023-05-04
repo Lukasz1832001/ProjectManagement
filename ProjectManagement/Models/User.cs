@@ -9,6 +9,7 @@ namespace ProjectManagement.Models
         public byte[]? Picture { get; set; }
 
         //relation
-        public List<ProjectTask> Tasks { get; set; }        
+        public List<ProjectTask> Tasks { get; set; }
+        public List<Team> Teams { get; set; }
     }
 }
