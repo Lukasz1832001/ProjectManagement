@@ -6,207 +6,229 @@
 }
 
 <h1>Details</h1>
+<h4>@Html.DisplayFor(model => model.Name)</h4>
+<hr />
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</button>
+        <button class="nav-link" id="nav-task-tab" data-bs-toggle="tab" data-bs-target="#nav-task" type="button" role="tab" aria-controls="nav-task" aria-selected="false">Tasks</button>
+        <button class="nav-link" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="false">Risk</button>
+        <button class="nav-link" id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment" type="button" role="tab" aria-controls="nav-comment" aria-selected="false">Comments</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.EndDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.EndDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+        </dl>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary">Edit</a> |
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
+        <!--Tasks-->
+        <a asp-controller="ProjectTasks" asp-action="Create" class="btn btn-primary">Create Task</a>
 
-<div>
-    <h4>@Html.DisplayFor(model => model.Name)</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-
-    <!--Tasks-->
-    <a asp-controller="ProjectTasks" asp-action="Create">Create Task</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-                <th>
-                    Project
-                </th>
-                <th>
-                    User Name
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.Tasks)
-            {
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        @item.StartDate
-                    </td>
-                    <td>
-                        @item.EndDate
-                    </td>
-                    <td>
-                        @item.Project.Name
-                    </td>
-                    <td>
-                        @item.User.UserName
-                    </td>
-                    <td>
-                        <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
-                        <a asp-controller="ProjectTasks" asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
-                        <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
-                    </td>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Start Date
+                    </th>
+                    <th>
+                        End Date
+                    </th>
+                    <th>
+                        Project
+                    </th>
+                    <th>
+                        User Name
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-
-    <!--Risk-->
-    <a asp-controller="Risks" asp-action="Create">Create Risk</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Probability
-                </th>
-                <th>
-                    Influence
-                </th>
-                <th>
-                    Reaction
-                </th>
-                <th>
-                    ProjectId
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in ViewBag.Risks)
-            {
-                <tr>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        @item.Influence
-                    </td>
-                    <td>
-                        @item.Influence
-                    </td>
-                    <td>
-                        @item.Reaction
-                    </td>
-                    <td>
-                        @item.ProjectId
-                    </td>
-                    <td>
-                        <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId">Edit</a> |
-                        <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId">Details</a> |
-                        <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <!--Comment cards-->
-    <div class="container">
-        <div class="row d-flex justify-content-center">
-            <div class="" style="width:100%;">
-                @foreach (var item in ViewBag.Comments)
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Tasks)
                 {
-                    <div class="card" style="margin-bottom:15px;">
-                        <div class="card-body">
-                            <div class="d-flex flex-start align-items-center">
-                                <!--
-                                <img class="rounded-circle shadow-1-strong me-3"
-                                                                    src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
-                                                                    height="60" />
-                                -->
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.StartDate
+                        </td>
+                        <td>
+                            @item.EndDate
+                        </td>
+                        <td>
+                            @item.Project.Name
+                        </td>
+                        <td>
+                            @item.User.UserName
+                        </td>
+                        <td>
+                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
+                            <a asp-controller="ProjectTasks" asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
+                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
+        <!--Risk-->
+        <a asp-controller="Risks" asp-action="Create" class="btn btn-primary">Create Risk</a>
 
-                                <div>
-                                    <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
-                                    <p class="text-muted small mb-0">
-                                        @item.CreateDate
-                                    </p>
-                                </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Probability
+                    </th>
+                    <th>
+                        Influence
+                    </th>
+                    <th>
+                        Reaction
+                    </th>
+                    <th>
+                        ProjectId
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Risks)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.Influence
+                        </td>
+                        <td>
+                            @item.Influence
+                        </td>
+                        <td>
+                            @item.Reaction
+                        </td>
+                        <td>
+                            @item.ProjectId
+                        </td>
+                        <td>
+                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId">Edit</a> |
+                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId">Details</a> |
+                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="nav-comment" role="tabpanel" aria-labelledby="nav-comment-tab">
+        <!--Comment cards-->
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="" style="width:100%;">
+                    <div class="card-body py-3 border-0">
+                        @using (Html.BeginForm("AddComment", "Projects"))
+                        {
+                            @Html.Hidden("projectId", Model.ProjectId)
+
+                            <div class="form-group">
+                                @Html.TextArea("commentText", null, new { @class = "form-control", @required = "required" ,placeholder = "Write your comment here"})
+                                @Html.ValidationMessage("commentText", "", new { @class = "text-danger" })
                             </div>
 
-                            <p class="mt-3 mb-4 pb-2">
-                                @item.Content
-                            </p>
-                        </div>
+                            <button type="submit" class="btn btn-primary">Add comment</button>
+                        }
                     </div>
-                }
-
-                <div class="card-body py-3 border-0" style="background-color: lightgray;">
-                    @using (Html.BeginForm("AddComment", "Projects"))
+                    
+                    @foreach (var item in ViewBag.Comments)
                     {
-                        @Html.Hidden("projectId", Model.ProjectId)
+                        <div class="card" style="margin-bottom:15px;">
+                            <div class="card-body">
+                                <div class="d-flex flex-start align-items-center">
+                                    <!--
+                                    <img class="rounded-circle shadow-1-strong me-3"
+                                                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
+                                                                        height="60" />
+                                    -->
 
-                        <div class="form-group">
-                            @Html.Label("commentText", "Komentarz")
-                            @Html.TextArea("commentText", null, new { @class = "form-control", @required = "required" })
-                            @Html.ValidationMessage("commentText", "", new { @class = "text-danger" })
+                                    <div>
+                                        <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
+                                        <p class="text-muted small mb-0">
+                                            @item.CreateDate
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <p class="mt-3 mb-4 pb-2">
+                                    @item.Content
+                                </p>
+                                @if(item.UserId == ViewBag.UserId)
+                                {
+                                    <div>
+                                        @using (Html.BeginForm("DeleteComment", "Projects", new { commentId = item.CommentId }, FormMethod.Post))
+                                        {
+                                            @Html.Hidden("projectId", Model.ProjectId)
+
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        }
+                                    </div>
+                                }                     
+                            </div>
                         </div>
-
-                        <button type="submit" class="btn btn-primary">Dodaj komentarz</button>
                     }
                 </div>
-
             </div>
         </div>
     </div>
+</div>
 
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProjectId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
 

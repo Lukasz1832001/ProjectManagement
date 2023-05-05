@@ -34,6 +34,8 @@ namespace ProjectManagement.Controllers
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int id)
         {
+            ViewBag.UserId = _user.GetUserId(HttpContext.User);
+
             List<ProjectTask> tasks = _context.Tasks.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Tasks = tasks;
 
@@ -41,6 +43,7 @@ namespace ProjectManagement.Controllers
             ViewBag.Risks = risks;
 
             List<Comment> comments = _context.Comments.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
+            comments.Reverse();
             ViewBag.Comments = comments;
 
             if (_context.Projects == null)
@@ -59,6 +62,7 @@ namespace ProjectManagement.Controllers
         //Add comments
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public ActionResult AddComment(int projectId, string commentText)
         {
 
@@ -81,7 +85,21 @@ namespace ProjectManagement.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
 
         }
-       
+        //Add comments
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteComment(int projectId, int commentId)
+        {
+
+            var comment = _context.Comments.Find(commentId);
+            _context.Comments.Remove(comment);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new { id = projectId });
+
+        }
+
 
         // GET: Projects/Create
         public IActionResult Create()

@@ -17,84 +17,40 @@
             <div>Active</div>
             @foreach (var item in Model)
             {
-                if (item.Status == false)
-                {
-                    <div class="card" style="width: 100%;margin:25px;">
-                        <div class="card-body">
-                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
-                            <div class="d-flex justify-content-around">
-                                <div class="row  align-items-start">
-                                    <div class="col">
-                                        <div style="text">
-                                            Start Date
-                                        </div>
-                                        <div class="date-card">
-                                            <div class="day">@Html.DisplayFor(model => item.StartDate.Day)</div>
-                                            <div>
-                                                <div class="month">@Convert.ToDateTime(item.StartDate).ToString("MMMM")</div>
-                                                <div class="year">@Html.DisplayFor(model => item.StartDate.Year)</div>
-                                            </div>
+                <div class="card" style="width: 100%;margin:25px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <div class="d-flex justify-content-around">
+                            <div class="row  align-items-start">
+                                <div class="col">
+                                    <div style="text">
+                                        Start Date
+                                    </div>
+                                    <div class="date-card">
+                                        <div class="day">@Html.DisplayFor(model => item.StartDate.Day)</div>
+                                        <div>
+                                            <div class="month">@Convert.ToDateTime(item.StartDate).ToString("MMMM")</div>
+                                            <div class="year">@Html.DisplayFor(model => item.StartDate.Year)</div>
                                         </div>
                                     </div>
-                                    <div class="col">
-                                        End Date
-                                        <div class="date-card">
-                                            <div class="day">@Html.DisplayFor(model => item.EndDate.Day)</div>
-                                            <div>
-                                                <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
-                                                <div class="year">@Html.DisplayFor(model => item.EndDate.Year)</div>
-                                            </div>
+                                </div>
+                                <div class="col">
+                                    End Date
+                                    <div class="date-card">
+                                        <div class="day">@Html.DisplayFor(model => item.EndDate.Day)</div>
+                                        <div>
+                                            <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
+                                            <div class="year">@Html.DisplayFor(model => item.EndDate.Year)</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-primary">Details</a>
                         </div>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-primary">Details</a>
                     </div>
-                }
-            }
-        </div>
-        <div class="col">
-            <div>Done</div>
-            @foreach (var item in Model)
-            {
-                if (item.Status == true)
-                {
-                    <div class="card" style="width: 100%;margin:25px;">
-                        <div class="card-body">
-                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
-                            <div class="d-flex justify-content-around">
-                                <div class="row  align-items-start">
-                                    <div class="col">
-                                        <div style="text">
-                                            Start Date
-                                        </div>
-                                        <div class="date-card">
-                                            <div class="day">@Html.DisplayFor(model => item.StartDate.Day)</div>
-                                            <div>
-                                                <div class="month">@Convert.ToDateTime(item.StartDate).ToString("MMMM")</div>
-                                                <div class="year">@Html.DisplayFor(model => item.StartDate.Year)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        End Date
-                                        <div class="date-card">
-                                            <div class="day">@Html.DisplayFor(model => item.EndDate.Day)</div>
-                                            <div>
-                                                <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
-                                                <div class="year">@Html.DisplayFor(model => item.EndDate.Year)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-primary">Details</a>
-                        </div>
-                    </div>
-                }
+                </div>
+                
             }
         </div>
     </div>
