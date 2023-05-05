@@ -78,7 +78,7 @@ namespace ProjectManagement.Controllers
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("Details", new { id = projectId });
+            return RedirectToAction(nameof(Details), new { id = projectId });
 
         }
        
