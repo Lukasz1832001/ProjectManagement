@@ -16,7 +16,6 @@ namespace ProjectManagement.Data
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Risk> Risks { get; set; }
-        public DbSet<Team> Teams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,10 +26,6 @@ namespace ProjectManagement.Data
                 .WithMany(p => p.Comments)
                 .HasForeignKey(c => c.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Entity<Team>()
-                .HasOne(c => c.Leader)
-                .WithMany(p => p.Teams);
         }
     }
 }

@@ -48,6 +48,7 @@
             <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary">Edit</a> |
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
         </div>
+        <div>Tutaj członkowie zespołu</div>
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
@@ -193,12 +194,9 @@
                         <div class="card" style="margin-bottom:15px;">
                             <div class="card-body">
                                 <div class="d-flex flex-start align-items-center">
-                                    <!--
                                     <img class="rounded-circle shadow-1-strong me-3"
-                                                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp" alt="avatar" width="60"
+                                                                        src="~/defaultProfilePicture.png" alt="avatar" width="60"
                                                                         height="60" />
-                                    -->
-
                                     <div>
                                         <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
                                         <p class="text-muted small mb-0">

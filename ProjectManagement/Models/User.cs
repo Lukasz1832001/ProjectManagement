@@ -10,6 +10,5 @@ namespace ProjectManagement.Models
 
         //relation
         public List<ProjectTask> Tasks { get; set; }
-        public List<Team> Teams { get; set; }
     }
 }
