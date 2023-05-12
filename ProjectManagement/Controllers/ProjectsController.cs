@@ -35,6 +35,9 @@ namespace ProjectManagement.Controllers
         public async Task<IActionResult> Details(int id)
         {
             ViewBag.UserId = _user.GetUserId(HttpContext.User);
+            
+            List<User> users = _context.Users.ToList();
+            ViewBag.Users = users;
 
             List<ProjectTask> tasks = _context.Tasks.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             ViewBag.Tasks = tasks;
@@ -51,7 +54,7 @@ namespace ProjectManagement.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
+            var project = await _context.Projects.Include(u=>u.Users)
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
             {
@@ -85,7 +88,7 @@ namespace ProjectManagement.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
 
         }
-        //Add comments
+        //Delete comments
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -99,9 +102,21 @@ namespace ProjectManagement.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
 
         }
+        //Add user
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddUserToProject(int projectId, string userId)
+        {
+            Project project = _context.Projects.Include(p => p.Users).FirstOrDefault(p => p.ProjectId == projectId);
+            User user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            project.Users.Add(user);
+            _context.SaveChanges();
 
+            return RedirectToAction(nameof(Details), new { id = projectId });
+        }
 
         // GET: Projects/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -110,10 +125,19 @@ namespace ProjectManagement.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectId,Name,StartDate,EndDate,Status")] Project project)
         {
+            // Pobierz użytkownika obecnie zalogowanego
+            User currentUser = await _user.GetUserAsync(User);
+
+            if (currentUser != null)
+            {
+                // Przypisz użytkownika do projektu
+                project.Users = new List<User> { currentUser };
+            }
             _context.Add(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

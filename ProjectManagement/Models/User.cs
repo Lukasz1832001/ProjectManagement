@@ -10,5 +10,6 @@ namespace ProjectManagement.Models
 
         //relation
         public List<ProjectTask> Tasks { get; set; }
+        public List<Project> Projects { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace ProjectManagement.Models
         public List<ProjectTask> Tasks { get; set; }
         public List<Risk> Risks { get; set; }
         public List<Comment> Comments { get; set; }
-        
+        public List<User> Users { get; set; }
+
     }
 }

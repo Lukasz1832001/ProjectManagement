@@ -8,12 +8,14 @@
 <h1>Details</h1>
 <h4>@Html.DisplayFor(model => model.Name)</h4>
 <hr />
+
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</button>
-        <button class="nav-link" id="nav-task-tab" data-bs-toggle="tab" data-bs-target="#nav-task" type="button" role="tab" aria-controls="nav-task" aria-selected="false">Tasks</button>
-        <button class="nav-link" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="false">Risk</button>
-        <button class="nav-link" id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment" type="button" role="tab" aria-controls="nav-comment" aria-selected="false">Comments</button>
+        <a class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</a>
+        <a class="nav-link" id="nav-team-tab" data-bs-toggle="tab" data-bs-target="#nav-team" type="button" role="tab" aria-controls="nav-team" aria-selected="false">Team</a>
+        <a class="nav-link" id="nav-task-tab" data-bs-toggle="tab" data-bs-target="#nav-task" type="button" role="tab" aria-controls="nav-task" aria-selected="false">Tasks</a>
+        <a class="nav-link" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="false">Risk</a>
+        <a class="nav-link" id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment" type="button" role="tab" aria-controls="nav-comment" aria-selected="false">Comments</a>
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -47,8 +49,54 @@
         <div>
             <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary">Edit</a> |
             <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger">Delete</a>
         </div>
-        <div>Tutaj członkowie zespołu</div>
+    </div>
+    <div class="tab-pane fade" id="nav-team" role="tabpanel" aria-labelledby="nav-team-tab">
+        <!--Team-->
+        <div>
+            <div style="margin:15px;">
+                <h3>Dodaj użytkownika do tego projektu:</h3>
+                @using (Html.BeginForm("AddUserToProject", "Projects", FormMethod.Post))
+                {
+                    @Html.Hidden("projectId", Model.ProjectId)
+
+                    <label>Wybierz użytkownika:</label>
+                    <select name="userId" class="select2" style="width:50%;">
+                        @foreach (var user in ViewBag.Users)
+                        {
+                            <option value="@user.Id">@user.UserName</option>
+                        }
+                    </select>
+                    <input class="btn btn-primary" type="submit" value="Dodaj" />
+                }
+            </div>
+            <div>
+                <h2>Team</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                User Name
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>
+                                    @user.UserName
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>            
+        </div>
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
@@ -228,5 +276,31 @@
     </div>
 </div>
 
+@section scripts {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
+    </script>
+    
+    <script>
+        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+            var activeTab = $(event.target).attr('aria-controls'); 
+            localStorage.setItem('activeTab', activeTab); 
+        });
 
+        $(document).ready(function () {
+            var activeTab = localStorage.getItem('activeTab');
+            if (activeTab) {
+                $('.nav-tabs a').removeClass('active').attr('aria-selected', 'false'); 
+                $('#' + activeTab + '-tab').addClass('active').attr('aria-selected', 'true'); 
+                $('.tab-pane').removeClass('show active'); 
+                $('#' + activeTab).addClass('show active'); 
+            }                     
+        });
+    </script>
+    
+}
 
