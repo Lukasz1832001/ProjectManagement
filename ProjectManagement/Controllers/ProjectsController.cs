@@ -68,7 +68,6 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddComment(int projectId, string commentText)
         {
-
             var project = _context.Projects.Find(projectId);
             if (project != null)
             {
@@ -128,7 +127,7 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,StartDate,EndDate,Status")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Project project)
         {
             // Pobierz użytkownika obecnie zalogowanego
             User currentUser = await _user.GetUserAsync(User);
@@ -165,7 +164,7 @@ namespace ProjectManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,StartDate,EndDate,Status")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Project project)
         {
             if (id != project.ProjectId)
             {

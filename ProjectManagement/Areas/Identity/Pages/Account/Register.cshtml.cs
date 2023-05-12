@@ -117,6 +117,7 @@ namespace ProjectManagement.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                user.TotalTime = 0;
 
                 if (Request.Form.Files.Count > 0)
                 {

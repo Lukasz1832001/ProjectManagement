@@ -67,7 +67,7 @@ namespace ProjectManagement.Controllers
         {
             _context.Add(risk);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Projects", new { id = risk.ProjectId });
 
         }
 
