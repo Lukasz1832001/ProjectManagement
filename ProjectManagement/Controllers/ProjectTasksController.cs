@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
@@ -51,12 +52,24 @@ namespace ProjectManagement.Controllers
 
             return View(projectTask);
         }
-
-        // GET: ProjectTasks/Create
-        public IActionResult Create()
+        public IActionResult ChangeStatus(int id)
         {
-            ViewData["UserId"]= new SelectList(_context.Users, "Id", "UserName");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "Name");
+            var task = _context.Tasks.FirstOrDefault(t => t.TaskId == id);
+
+            if (task != null)
+            {
+                task.Status = !task.Status;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+        // GET: ProjectTasks/Create
+        public IActionResult Create(int projectId, string projectName)
+        {
+            var project = _context.Projects.FirstOrDefault(x => x.ProjectId == projectId);
+            ViewData["Users"] = new SelectList(_context.Users.Where(p => p.Projects.Contains(project)), "Id", "UserName");
+            ViewData["ProjectId"] = projectId;
+            ViewData["ProjectName"] = projectName;
             return View();
         }
 
@@ -67,6 +80,7 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TaskId,Name,Description,Time,StartDate,EndDate,ProjectId,UserId")] ProjectTask projectTask)
         {
+            projectTask.Status = false;
             var user = _context.Users.FirstOrDefault(x => x.Id == projectTask.UserId);
             user.TotalTime += projectTask.Time;
             _context.Add(projectTask);
@@ -75,7 +89,7 @@ namespace ProjectManagement.Controllers
         }
 
         // GET: ProjectTasks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _context.Tasks == null)
             {
@@ -87,8 +101,9 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "Name", projectTask.ProjectId);
+            var project = _context.Projects.FirstOrDefault(p => p.Tasks.Contains(projectTask));
+            ViewData["ProjectName"] = project.Name.ToString();
+            ViewData["Users"] = new SelectList(_context.Users.Where(p => p.Projects.Contains(project)), "Id", "UserName");
             return View(projectTask);
         }
 

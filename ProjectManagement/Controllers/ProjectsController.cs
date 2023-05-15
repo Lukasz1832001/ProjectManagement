@@ -24,11 +24,13 @@ namespace ProjectManagement.Controllers
         }
 
         // GET: Projects
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return _context.Projects != null ?
-                        View(await _context.Projects.ToListAsync()) :
-                        Problem("Entity set 'AppDbContext.Projects'  is null.");
+            string userId = _user.GetUserId(HttpContext.User);
+            var user = _context.Users.FirstOrDefault(U => U.Id == userId);
+            var results = _context.Projects.Where(x => x.Users.Contains(user));
+            return View(results);
         }
 
         // GET: Projects/Details/5

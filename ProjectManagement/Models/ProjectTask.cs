@@ -9,11 +9,15 @@ namespace ProjectManagement.Models
         public int TaskId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [DisplayName("Start")]
         public DateTime StartDate { get; set; }
+        [DisplayName("End")]
         public DateTime EndDate { get; set; }
         public int Time { get; set; }
+        public bool Status { get; set; }
 
         //relations
+        [DisplayName("Project Name")]
         public int ProjectId { get; set; }
         public Project Project { get; set; }
         
