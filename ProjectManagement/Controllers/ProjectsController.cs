@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
 using ProjectManagement.Models;
@@ -108,7 +109,7 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddUserToProject(int projectId, string userId)
         {
-            Project project = _context.Projects.Include(p => p.Users).FirstOrDefault(p => p.ProjectId == projectId);
+            Models.Project project = _context.Projects.Include(p => p.Users).FirstOrDefault(p => p.ProjectId == projectId);
             User user = _context.Users.FirstOrDefault(u => u.Id == userId);
             project.Users.Add(user);
             _context.SaveChanges();
@@ -129,7 +130,7 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Models.Project project)
         {
             // Pobierz użytkownika obecnie zalogowanego
             User currentUser = await _user.GetUserAsync(User);
@@ -166,7 +167,7 @@ namespace ProjectManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Models.Project project)
         {
             if (id != project.ProjectId)
             {
@@ -189,7 +190,7 @@ namespace ProjectManagement.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = project.ProjectId });
 
         }
 
