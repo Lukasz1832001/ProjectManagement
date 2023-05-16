@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Data;
@@ -103,6 +104,7 @@ namespace ProjectManagement.Controllers
             }
             var project = _context.Projects.FirstOrDefault(p => p.Tasks.Contains(projectTask));
             ViewData["ProjectName"] = project.Name.ToString();
+            ViewData["ProjectId"] = project.ProjectId;
             ViewData["Users"] = new SelectList(_context.Users.Where(p => p.Projects.Contains(project)), "Id", "UserName");
             return View(projectTask);
         }
@@ -135,7 +137,7 @@ namespace ProjectManagement.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Projects", new { id = projectTask.ProjectId });
 
         }
 
@@ -154,7 +156,7 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["ProjectId"] = projectTask.ProjectId;
             return View(projectTask);
         }
 
@@ -174,7 +176,7 @@ namespace ProjectManagement.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Projects", new { id = projectTask.ProjectId });
         }
 
         private bool ProjectTaskExists(int id)

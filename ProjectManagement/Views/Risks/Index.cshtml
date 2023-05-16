@@ -56,9 +56,9 @@
                 @Html.DisplayFor(modelItem => item.Project.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.RiskId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.RiskId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.RiskId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.RiskId" class="btn btn-primary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-warning">Delete</a>
             </td>
         </tr>
 }

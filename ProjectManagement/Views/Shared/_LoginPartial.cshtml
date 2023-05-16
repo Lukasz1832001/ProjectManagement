@@ -11,9 +11,13 @@
             <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
                 @if (UserManager.GetUserAsync(User).Result.Picture != null)
                 {
-                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.Picture))">
+                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px; margin-right:15px;" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.Picture))">
                 }
-                @UserManager.GetUserName(User)!</a>
+                else
+                {
+                    <img style="width:40px;height:40px; object-fit:cover; border-radius:30px; margin-right:15px;" src="~/defaultProfilePicture.png">
+                }
+                @UserManager.GetUserName(User)</a>
         </li>
         <li class="nav-item">
             <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

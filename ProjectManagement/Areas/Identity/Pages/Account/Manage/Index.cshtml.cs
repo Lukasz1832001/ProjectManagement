@@ -62,6 +62,11 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
             
             [Display(Name = "User Picture")]
             public byte[] Picture { get; set; }
+
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
         }
 
         private async Task LoadAsync(User user)
@@ -70,13 +75,17 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             var Picture = user.Picture;
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
 
             Username = userName;
 
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                Picture = Picture
+                Picture = Picture,
+                FirstName = firstName,
+                LastName = lastName,
             };
         }
 
@@ -95,6 +104,18 @@ namespace ProjectManagement.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnPostAsync()
         {
             var user = await _userManager.GetUserAsync(User);
+            var firstName = user.FirstName;
+            var lastName = user.LastName;
+            if (Input.FirstName != firstName)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+            if (Input.LastName != lastName)
+            {
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
+            }
 
             if (Request.Form.Files.Count > 0)
             {

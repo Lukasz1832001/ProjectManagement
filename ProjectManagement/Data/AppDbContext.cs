@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
 using System.Reflection.Metadata;
@@ -20,6 +21,11 @@ namespace ProjectManagement.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<IdentityUser>(entity =>
+            {
+                entity.ToTable(name: "Users");
+            });
 
             builder.Entity<Comment>()
                 .HasOne(c => c.Project)

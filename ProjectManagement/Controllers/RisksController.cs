@@ -29,7 +29,7 @@ namespace ProjectManagement.Controllers
         }
 
         // GET: Risks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null || _context.Risks == null)
             {
@@ -43,14 +43,15 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["ProjectId"] = risk.ProjectId;
             return View(risk);
         }
 
         // GET: Risks/Create
-        public IActionResult Create()
+        public IActionResult Create(int projectId, string projectName)
         {
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "Name");
+            ViewData["ProjectId"] = projectId;
+            ViewData["ProjectName"] = projectName;
             ViewData["ImpactCategories"] = new SelectList(Enum.GetValues(typeof(ImpactCategories))
                                                  .Cast<ImpactCategories>()
                                                  .Select(v => v.ToString())
@@ -84,7 +85,9 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "Name", risk.ProjectId);
+            var project = _context.Projects.FirstOrDefault(p => p.Risks.Contains(risk));
+            ViewData["ProjectName"] = project.Name.ToString();
+            ViewData["ProjectId"] = project.ProjectId;
             ViewData["ImpactCategories"] = new SelectList(Enum.GetValues(typeof(ImpactCategories))
                                                  .Cast<ImpactCategories>()
                                                  .Select(v => v.ToString())
@@ -120,7 +123,7 @@ namespace ProjectManagement.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Projects", new { id = risk.ProjectId });
 
         }
 
@@ -139,7 +142,7 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["ProjectId"] = risk.ProjectId;
             return View(risk);
         }
 
@@ -159,7 +162,7 @@ namespace ProjectManagement.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Projects", new { id = risk.ProjectId });
         }
 
         private bool RiskExists(int id)

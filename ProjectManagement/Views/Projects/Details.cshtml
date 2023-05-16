@@ -4,7 +4,6 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml"; 
 }
-
 <h1>@Html.DisplayFor(model => model.Name)</h1>
 <hr />
 
@@ -82,6 +81,9 @@
                     <thead>
                         <tr>
                             <th>
+                                User
+                            </th>
+                            <th>
                                 User Name
                             </th>
                             <th>
@@ -94,6 +96,21 @@
                         @foreach (var user in Model.Users)
                         {
                             <tr>
+                                <td>
+                                    @if (user.Picture != null)
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="data:image/*;base64,@(Convert.ToBase64String(user.Picture))" alt="avatar" width="40"
+                                             height="40" />
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/defaultProfilePicture.png" alt="avatar" width="40"
+                                             height="40" />
+                                    }
+                                    @user.FirstName &nbsp;@user.LastName
+                                </td>
                                 <td>
                                     @user.UserName
                                 </td>
@@ -111,7 +128,8 @@
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
-        <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId" asp-route-projectName="@Model.Name" class="btn btn-primary">Create Task</a>
+        <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId" 
+        asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;">Create Task</a>
 
         <table class="table">
             <thead>
@@ -166,9 +184,8 @@
                             @item.User.UserName
                         </td>
                         <td>
-                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId">Edit</a> |
-                            <a asp-controller="ProjectTasks" asp-action="Details" asp-route-id="@item.TaskId">Details</a> |
-                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId">Delete</a>
+                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary">Edit</a> |
+                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-warning">Delete</a>
                         </td>
                     </tr>
                 }
@@ -177,7 +194,8 @@
     </div>
     <div class="tab-pane fade" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
         <!--Risk-->
-        <a asp-controller="Risks" asp-action="Create" class="btn btn-primary">Create Risk</a>
+        <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId" 
+        asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;">Create Risk</a>
 
         <table class="table">
             <thead>
@@ -198,7 +216,7 @@
                         Reaction
                     </th>
                     <th>
-                        ProjectId
+                        Project Name
                     </th>
                     <th></th>
                 </tr>
@@ -214,7 +232,7 @@
                             @item.Description
                         </td>
                         <td>
-                            @item.Influence
+                            @item.Probability
                         </td>
                         <td>
                             @item.Influence
@@ -223,12 +241,12 @@
                             @item.Reaction
                         </td>
                         <td>
-                            @item.ProjectId
+                            @item.Project.Name
                         </td>
                         <td>
-                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId">Edit</a> |
-                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId">Details</a> |
-                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId">Delete</a>
+                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary">Edit</a> |
+                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId" class="btn btn-primary">Details</a> |
+                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-warning">Delete</a>
                         </td>
                     </tr>
                 }
@@ -259,9 +277,18 @@
                         <div class="card" style="margin-bottom:15px;">
                             <div class="card-body">
                                 <div class="d-flex flex-start align-items-center">
-                                    <img class="rounded-circle shadow-1-strong me-3"
-                                                                        src="~/defaultProfilePicture.png" alt="avatar" width="60"
-                                                                        height="60" />
+                                    @if(item.User.Picture != null)
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="data:image/*;base64,@(Convert.ToBase64String(item.User.Picture))" alt="avatar" width="60"
+                                        height="60" />
+                                    }
+                                    else
+                                    {
+                                        <img class="rounded-circle shadow-1-strong me-3"
+                                             src="~/defaultProfilePicture.png" alt="avatar" width="60"
+                                             height="60" />
+                                    }
                                     <div>
                                         <h6 class="fw-bold text-primary mb-1">@item.User.UserName</h6>
                                         <p class="text-muted small mb-0">

@@ -101,6 +101,13 @@ namespace ProjectManagement.Areas.Identity.Pages.Account
 
             [Display(Name = "User Picture")]
             public byte[] Picture { get; set; }
+
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
         }
 
 
@@ -118,6 +125,8 @@ namespace ProjectManagement.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.TotalTime = 0;
+                user.FirstName = Input.FirstName; 
+                user.LastName = Input.LastName;
 
                 if (Request.Form.Files.Count > 0)
                 {
