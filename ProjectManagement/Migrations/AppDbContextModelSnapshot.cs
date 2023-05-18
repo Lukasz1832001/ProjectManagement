@@ -402,6 +402,24 @@ namespace ProjectManagement.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.ProjectUser", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsManager")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectUsers");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.Risk", b =>
                 {
                     b.Property<int>("RiskId")
@@ -436,21 +454,6 @@ namespace ProjectManagement.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("Risks");
-                });
-
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.Property<int>("ProjectsProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("ProjectsProjectId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("ProjectUser");
                 });
 
             modelBuilder.Entity("ProjectManagement.Models.User", b =>
@@ -585,6 +588,25 @@ namespace ProjectManagement.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ProjectManagement.Models.ProjectUser", b =>
+                {
+                    b.HasOne("ProjectManagement.Models.Project", "Project")
+                        .WithMany("ProjectUsers")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProjectManagement.Models.User", "User")
+                        .WithMany("ProjectUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ProjectManagement.Models.Risk", b =>
                 {
                     b.HasOne("ProjectManagement.Models.Project", "Project")
@@ -596,21 +618,6 @@ namespace ProjectManagement.Migrations
                     b.Navigation("Project");
                 });
 
-            modelBuilder.Entity("ProjectUser", b =>
-                {
-                    b.HasOne("ProjectManagement.Models.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ProjectManagement.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ProjectManagement.Models.Project", b =>
                 {
                     b.Navigation("Comments");
@@ -619,6 +626,8 @@ namespace ProjectManagement.Migrations
 
                     b.Navigation("Milestones");
 
+                    b.Navigation("ProjectUsers");
+
                     b.Navigation("Risks");
 
                     b.Navigation("Tasks");
@@ -626,6 +635,8 @@ namespace ProjectManagement.Migrations
 
             modelBuilder.Entity("ProjectManagement.Models.User", b =>
                 {
+                    b.Navigation("ProjectUsers");
+
                     b.Navigation("Tasks");
                 });
 #pragma warning restore 612, 618

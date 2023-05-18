@@ -29,17 +29,19 @@ namespace ProjectManagement.Controllers
         public async Task<IActionResult> Index()
         {
             string userId = _user.GetUserId(HttpContext.User);
-            var user = _context.Users.FirstOrDefault(U => U.Id == userId);
-            var results = _context.Projects.Where(x => x.Users.Contains(user));
-            return View(results);
+            var user = await _context.Users.Include(u => u.ProjectUsers).ThenInclude(pu => pu.Project)
+                                           .FirstOrDefaultAsync(u => u.Id == userId);
+            var projects = user.ProjectUsers.Select(pu => pu.Project).ToList();
+            return View(projects);
         }
 
         public async Task<IActionResult> ArchivalProjects()
         {
             string userId = _user.GetUserId(HttpContext.User);
-            var user = _context.Users.FirstOrDefault(U => U.Id == userId);
-            var results = _context.Projects.Where(x => x.Users.Contains(user));
-            return View(results);
+            var user = await _context.Users.Include(u => u.ProjectUsers).ThenInclude(pu => pu.Project)
+                                           .FirstOrDefaultAsync(u => u.Id == userId);
+            var projects = user.ProjectUsers.Select(pu => pu.Project).ToList();
+            return View(projects);
         }
 
         // GET: Projects/Details/5
@@ -71,8 +73,9 @@ namespace ProjectManagement.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.Include(u=>u.Users)
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
+            var project = await _context.Projects.Include(p => p.ProjectUsers)
+                                     .ThenInclude(pu => pu.User)
+                                     .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
             {
                 return NotFound();
@@ -168,10 +171,20 @@ namespace ProjectManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddUserToProject(int projectId, string userId)
         {
-            Models.Project project = _context.Projects.Include(p => p.Users).FirstOrDefault(p => p.ProjectId == projectId);
-            User user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            project.Users.Add(user);
-            _context.SaveChanges();
+            var project = _context.Projects.Include(p => p.ProjectUsers).FirstOrDefault(p => p.ProjectId == projectId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (project != null && user != null)
+            {
+                var projectUser = new ProjectUser
+                {
+                    ProjectId = projectId,
+                    UserId = userId
+                };
+
+                project.ProjectUsers.Add(projectUser);
+                _context.SaveChanges();
+            }
 
             return RedirectToAction(nameof(Details), new { id = projectId });
         }
@@ -207,8 +220,15 @@ namespace ProjectManagement.Controllers
 
             if (currentUser != null)
             {
-                project.Users = new List<User> { currentUser };
+                var projectUser = new ProjectUser
+                {
+                    UserId = currentUser.Id,
+                    IsManager = true
+                };
+
+                project.ProjectUsers = new List<ProjectUser> { projectUser };
             }
+
             _context.Add(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

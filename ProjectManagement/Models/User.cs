@@ -11,6 +11,6 @@ namespace ProjectManagement.Models
 
         //relation
         public List<ProjectTask> Tasks { get; set; }
-        public List<Project> Projects { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
     }
 }

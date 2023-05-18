@@ -15,6 +15,7 @@ namespace ProjectManagement.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Risk> Risks { get; set; }
@@ -35,6 +36,23 @@ namespace ProjectManagement.Data
                 .WithMany(p => p.Comments)
                 .HasForeignKey(c => c.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ProjectUser>()
+            .HasKey(pu => new { pu.UserId, pu.ProjectId });
+
+            builder.Entity<ProjectUser>()
+                .HasOne(pu => pu.User)
+                .WithMany(u => u.ProjectUsers)
+                .HasForeignKey(pu => pu.UserId);
+
+            builder.Entity<ProjectUser>()
+                .HasOne(pu => pu.Project)
+                .WithMany(p => p.ProjectUsers)
+                .HasForeignKey(pu => pu.ProjectId);
+
+            builder.Entity<ProjectUser>()
+                .Property(pu => pu.IsManager)
+                .HasColumnType("bit");
         }
     }
 }

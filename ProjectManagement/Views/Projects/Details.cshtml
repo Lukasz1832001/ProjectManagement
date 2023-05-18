@@ -191,8 +191,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var user in Model.Users)
+                        @foreach (var projectUser in Model.ProjectUsers)
                         {
+                            var user = projectUser.User;
                             <tr>
                                 <td>
                                     @if (user.Picture != null)

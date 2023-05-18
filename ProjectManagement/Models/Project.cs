@@ -20,11 +20,11 @@ namespace ProjectManagement.Models
         public string? Results { get; set; }
 
         //relations
-        public List<ProjectTask> Tasks { get; set; }
-        public List<Risk> Risks { get; set; }
-        public List<Comment> Comments { get; set; }
-        public List<User> Users { get; set; }
-        public List<Goal> Goals { get; set; }
-        public List<Milestone> Milestones { get; set; }
+        public List<ProjectTask>? Tasks { get; set; }
+        public List<Risk>? Risks { get; set; }
+        public List<Comment>? Comments { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
+        public List<Goal>? Goals { get; set; }
+        public List<Milestone>? Milestones { get; set; }
     }
 }

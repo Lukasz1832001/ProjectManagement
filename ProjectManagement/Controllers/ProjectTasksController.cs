@@ -67,8 +67,12 @@ namespace ProjectManagement.Controllers
         // GET: ProjectTasks/Create
         public IActionResult Create(int projectId, string projectName)
         {
-            var project = _context.Projects.FirstOrDefault(x => x.ProjectId == projectId);
-            ViewData["Users"] = new SelectList(_context.Users.Where(p => p.Projects.Contains(project)), "Id", "UserName");
+            var project = _context.Projects.Include(p => p.ProjectUsers)
+                               .ThenInclude(pu => pu.User)
+                               .FirstOrDefault(x => x.ProjectId == projectId);
+            var users = project.ProjectUsers.Select(pu => pu.User).ToList();
+
+            ViewData["Users"] = new SelectList(users, "Id", "UserName");
             ViewData["ProjectId"] = projectId;
             ViewData["ProjectName"] = projectName;
             return View();
@@ -102,10 +106,15 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
-            var project = _context.Projects.FirstOrDefault(p => p.Tasks.Contains(projectTask));
+            var project = _context.Projects.Include(p => p.ProjectUsers)
+                               .ThenInclude(pu => pu.User)
+                               .FirstOrDefault(p => p.Tasks.Contains(projectTask));
+
             ViewData["ProjectName"] = project.Name.ToString();
             ViewData["ProjectId"] = project.ProjectId;
-            ViewData["Users"] = new SelectList(_context.Users.Where(p => p.Projects.Contains(project)), "Id", "UserName");
+            var users = project.ProjectUsers.Select(pu => pu.User).ToList();
+
+            ViewData["Users"] = new SelectList(users, "Id", "UserName");
             return View(projectTask);
         }
 
