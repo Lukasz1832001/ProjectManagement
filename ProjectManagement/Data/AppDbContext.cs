@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManagement.Models;
+using System.Reflection.Emit;
 using System.Reflection.Metadata;
 
 namespace ProjectManagement.Data
@@ -17,6 +18,8 @@ namespace ProjectManagement.Data
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Risk> Risks { get; set; }
+        public DbSet<Goal> Goals { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +35,11 @@ namespace ProjectManagement.Data
                 .WithMany(p => p.Comments)
                 .HasForeignKey(c => c.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Entity<Project>()
+                .HasOne(p => p.Manager)
+                .WithMany(c => c.Projects)
+                .HasForeignKey(p => p.ManagerId);
         }
     }
 }

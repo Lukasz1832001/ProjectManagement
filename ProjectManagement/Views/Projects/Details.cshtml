@@ -2,18 +2,18 @@
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <h1>@Html.DisplayFor(model => model.Name)</h1>
 <hr />
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</a>
-        <a class="nav-link" id="nav-team-tab" data-bs-toggle="tab" data-bs-target="#nav-team" type="button" role="tab" aria-controls="nav-team" aria-selected="false">Team</a>
-        <a class="nav-link" id="nav-task-tab" data-bs-toggle="tab" data-bs-target="#nav-task" type="button" role="tab" aria-controls="nav-task" aria-selected="false">Tasks</a>
-        <a class="nav-link" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="false">Risk</a>
-        <a class="nav-link" id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment" type="button" role="tab" aria-controls="nav-comment" aria-selected="false">Comments</a>
+        <a class="nav-link active" id="nav-overview-tab" data-bs-toggle="tab" data-bs-target="#nav-overview" type="button" role="tab" aria-controls="nav-overview" aria-selected="true"><i class="bi bi-journal mr-2"></i>Overview</a>
+        <a class="nav-link" id="nav-team-tab" data-bs-toggle="tab" data-bs-target="#nav-team" type="button" role="tab" aria-controls="nav-team" aria-selected="false"><i class="bi bi-people-fill mr-2"></i>Team</a>
+        <a class="nav-link" id="nav-task-tab" data-bs-toggle="tab" data-bs-target="#nav-task" type="button" role="tab" aria-controls="nav-task" aria-selected="false"><i class="bi bi-card-checklist mr-2"></i>Tasks</a>
+        <a class="nav-link" id="nav-risk-tab" data-bs-toggle="tab" data-bs-target="#nav-risk" type="button" role="tab" aria-controls="nav-risk" aria-selected="false"><i class="bi bi-exclamation-diamond-fill mr-2"></i>Risk</a>
+        <a class="nav-link" id="nav-comment-tab" data-bs-toggle="tab" data-bs-target="#nav-comment" type="button" role="tab" aria-controls="nav-comment" aria-selected="false"><i class="bi bi-chat-right-text-fill mr-2"></i>Comments</a>
     </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
@@ -44,16 +44,119 @@
                 @Html.DisplayFor(model => model.EndDate)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.TotalBudget)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Status)
+                @Html.DisplayFor(model => model.TotalBudget)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ProjectScope)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ProjectScope)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Sponsor)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Sponsor)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Stakeholders)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Stakeholders)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Results)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Results)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Manager)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Manager.UserName)
             </dd>
         </dl>
+
+        <!--Goals-->
         <div>
-            <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary">Edit</a> |
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-            <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger">Delete</a>
+            @using (Html.BeginForm("CreateGoal", "Projects"))
+            {
+                @Html.Hidden("projectId", Model.ProjectId)
+
+                <div class="form-group">
+                    @Html.TextArea("name", null, new { @class = "form-control", @required = "required" ,placeholder = "Write new goal here"})
+                    @Html.ValidationMessage("name", "", new { @class = "text-danger" })
+                </div>
+
+                <button type="submit" class="btn btn-primary">Add</button>
+            }
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Goal
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Goals)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        <!--Milestones-->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Milestone
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Milestones != null)
+                {
+                    @foreach (var item in Model.Milestones)
+                    {
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.Date
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            No Milestones
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
+            <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-box-arrow-left mr-2"></i>Back</a> |
+            <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a> |
+            <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
         </div>
     </div>
     <div class="tab-pane fade" id="nav-team" role="tabpanel" aria-labelledby="nav-team-tab">
@@ -65,14 +168,15 @@
                 {
                     @Html.Hidden("projectId", Model.ProjectId)
 
-                    <select name="userId" class="select2" style="width:50%;">
+                    <select name="userId" class="select2" style="width:50%;" required>
                         <option value="" selected disabled>Select user</option>
                         @foreach (var user in ViewBag.Users)
                         {
                             <option value="@user.Id">@user.UserName</option>
                         }
                     </select>
-                    <input class="btn btn-primary" type="submit" value="Dodaj" />
+
+                    <button class="btn btn-primary" type="submit"><i class="bi bi-person-fill-add mr-2"></i>Add</button>
                 }
             </div>
             <div class="card" style="padding:15px;">
@@ -123,13 +227,13 @@
                         }
                     </tbody>
                 </table>
-            </div>            
+            </div>
         </div>
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
-        <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId" 
-        asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;">Create Task</a>
+        <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
+           asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Task</a>
 
         <table class="table">
             <thead>
@@ -144,16 +248,13 @@
                         Time
                     </th>
                     <th>
-                        Start Date
+                        Start
                     </th>
                     <th>
-                        End Date
+                        End
                     </th>
                     <th>
-                        Project
-                    </th>
-                    <th>
-                        User Name
+                        User
                     </th>
                     <th></th>
                 </tr>
@@ -172,20 +273,17 @@
                             @item.Time
                         </td>
                         <td>
-                            @item.StartDate
+                            @item.StartDate.ToString("dd MMM yyyy")
                         </td>
                         <td>
-                            @item.EndDate
-                        </td>
-                        <td>
-                            @item.Project.Name
+                            @item.EndDate.ToString("dd MMM yyyy")
                         </td>
                         <td>
                             @item.User.UserName
                         </td>
                         <td>
-                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary">Edit</a> |
-                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-warning">Delete</a>
+                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
+                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-warning"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
                         </td>
                     </tr>
                 }
@@ -194,8 +292,8 @@
     </div>
     <div class="tab-pane fade" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
         <!--Risk-->
-        <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId" 
-        asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;">Create Risk</a>
+        <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
+           asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Risk</a>
 
         <table class="table">
             <thead>
@@ -214,9 +312,6 @@
                     </th>
                     <th>
                         Reaction
-                    </th>
-                    <th>
-                        Project Name
                     </th>
                     <th></th>
                 </tr>
@@ -241,12 +336,9 @@
                             @item.Reaction
                         </td>
                         <td>
-                            @item.Project.Name
-                        </td>
-                        <td>
-                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary">Edit</a> |
-                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId" class="btn btn-primary">Details</a> |
-                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-warning">Delete</a>
+                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
+                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a> |
+                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-warning"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
                         </td>
                     </tr>
                 }
@@ -268,20 +360,20 @@
                                 @Html.ValidationMessage("commentText", "", new { @class = "text-danger" })
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Add comment</button>
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill mr-2"></i>Comment</button>
                         }
                     </div>
-                    
+
                     @foreach (var item in ViewBag.Comments)
                     {
                         <div class="card" style="margin-bottom:15px;">
                             <div class="card-body">
                                 <div class="d-flex flex-start align-items-center">
-                                    @if(item.User.Picture != null)
+                                    @if (item.User.Picture != null)
                                     {
                                         <img class="rounded-circle shadow-1-strong me-3"
                                              src="data:image/*;base64,@(Convert.ToBase64String(item.User.Picture))" alt="avatar" width="60"
-                                        height="60" />
+                                             height="60" />
                                     }
                                     else
                                     {
@@ -300,17 +392,17 @@
                                 <p class="mt-3 mb-4 pb-2">
                                     @item.Content
                                 </p>
-                                @if(item.UserId == ViewBag.UserId)
+                                @if (item.UserId == ViewBag.UserId)
                                 {
                                     <div>
                                         @using (Html.BeginForm("DeleteComment", "Projects", new { commentId = item.CommentId }, FormMethod.Post))
                                         {
                                             @Html.Hidden("projectId", Model.ProjectId)
 
-                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                            <button type="submit" class="btn btn-primary"><i class="bi bi-trash-fill mr-2"></i>Delete</button>
                                         }
                                     </div>
-                                }                     
+                                }
                             </div>
                         </div>
                     }
@@ -328,23 +420,23 @@
             $('.select2').select2();
         });
     </script>
-    
+
     <script>
         $('.nav-tabs a').on('shown.bs.tab', function (event) {
-            var activeTab = $(event.target).attr('aria-controls'); 
-            localStorage.setItem('activeTab', activeTab); 
+            var activeTab = $(event.target).attr('aria-controls');
+            localStorage.setItem('activeTab', activeTab);
         });
 
         $(document).ready(function () {
             var activeTab = localStorage.getItem('activeTab');
             if (activeTab) {
-                $('.nav-tabs a').removeClass('active').attr('aria-selected', 'false'); 
-                $('#' + activeTab + '-tab').addClass('active').attr('aria-selected', 'true'); 
-                $('.tab-pane').removeClass('show active'); 
-                $('#' + activeTab).addClass('show active'); 
-            }                     
+                $('.nav-tabs a').removeClass('active').attr('aria-selected', 'false');
+                $('#' + activeTab + '-tab').addClass('active').attr('aria-selected', 'true');
+                $('.tab-pane').removeClass('show active');
+                $('#' + activeTab).addClass('show active');
+            }
         });
     </script>
-    
+
 }
 

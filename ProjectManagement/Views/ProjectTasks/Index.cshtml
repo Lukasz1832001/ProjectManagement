@@ -6,93 +6,60 @@
 }
 
 <h1>My Tasks</h1>
-<div class="row">
-    <div class="col" style="width: 50%;">
-        <h2>Active</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.StartDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.EndDate)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            <h2>Active</h2>
+            @foreach (var item in Model)
+            {
+                if (item.Status == false)
                 {
-                    if(item.Status == false)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EndDate)
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary">Details</a> |
-                                <a asp-action="ChangeStatus" asp-route-id="@item.TaskId" class="btn btn-success">Mark as Done</a>
-                            </td>
-                        </tr>
-                    }    
+                    <div class="card" style="padding:15px;margin:15px;">
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Name)</p>
+                        <hr class="sidebar-divider my-0">
+                        <div class="row d-flex justify-content-center" style="margin-top:15px;">
+                            <div>Deadline</div>
+                            <div class="date-card">
+                                <div class="day">@Html.DisplayFor(modelItem => item.EndDate.Day)</div>
+                                <div>
+                                    <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
+                                    <div class="year">@Html.DisplayFor(modelItem => item.EndDate.Year)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary" style="margin:15px;"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a>
+                        <a asp-action="ChangeStatus" asp-route-id="@item.TaskId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
+                    </div>
                 }
-            </tbody>
-        </table>
+            }
 
-    </div>
-
-    <div class="col" style="width: 50%;">
-        <h2>Done</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Name)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.StartDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.EndDate)
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
+        </div>
+        <div class="col">
+            <h2>Done</h2>
+            @foreach (var item in Model)
+            {
+                if (item.Status == true)
                 {
-                    if (item.Status == true)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EndDate)
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary">Details</a>
-                            </td>
-                        </tr>
-                    }
+                    <div class="card" style="padding:15px; margin:15px;">
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Name)</p>
+                        <hr class="sidebar-divider my-0">
+                        <div class="row d-flex justify-content-center" style="margin-top:15px;">
+                            <div>Deadline</div>
+                            <div class="date-card">
+                                <div class="day">@Html.DisplayFor(modelItem => item.EndDate.Day)</div>
+                                <div>
+                                    <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
+                                    <div class="year">@Html.DisplayFor(modelItem => item.EndDate.Year)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary" style="margin:15px;"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a>
+                    </div>
                 }
-            </tbody>
-        </table>
+            }
 
+        </div>
     </div>
-
 </div>
+
 

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models
 {
@@ -11,12 +13,22 @@ namespace ProjectManagement.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool Status { get; set; }
+        public double TotalBudget { get; set; }
+        public string ProjectScope { get; set; }
+        public string Sponsor { get; set; }
+        public string Stakeholders { get; set; }
+        public string? Results { get; set; }
 
         //relations
         public List<ProjectTask> Tasks { get; set; }
         public List<Risk> Risks { get; set; }
         public List<Comment> Comments { get; set; }
         public List<User> Users { get; set; }
+        public List<Goal> Goals { get; set; }
+        public List<Milestone> Milestones { get; set; }
 
+        public string? ManagerId { get; set; }
+        [DisplayName("Manager")]
+        public User? Manager { get; set; }
     }
 }

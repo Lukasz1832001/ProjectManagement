@@ -34,6 +34,14 @@ namespace ProjectManagement.Controllers
             return View(results);
         }
 
+        public async Task<IActionResult> ArchivalProjects()
+        {
+            string userId = _user.GetUserId(HttpContext.User);
+            var user = _context.Users.FirstOrDefault(U => U.Id == userId);
+            var results = _context.Projects.Where(x => x.Users.Contains(user));
+            return View(results);
+        }
+
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int id)
         {
@@ -47,6 +55,12 @@ namespace ProjectManagement.Controllers
 
             List<Risk> risks = _context.Risks.Where(x => x.ProjectId == id).ToList();
             ViewBag.Risks = risks;
+
+            List<Goal> goals = _context.Goals.Where(x => x.ProjectId == id).ToList();
+            ViewBag.Goals = goals;
+
+            List<Milestone> milestones = _context.Milestones.Where(x => x.ProjectId == id).ToList();
+            ViewBag.Milestones = milestones;
 
             List<Comment> comments = _context.Comments.Where(x => x.ProjectId == id).Include(p => p.User).ToList();
             comments.Reverse();
@@ -65,6 +79,51 @@ namespace ProjectManagement.Controllers
             }
             return View(project);
         }
+        //Create goals
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateGoal(int projectId, string name)
+        {
+            var project = _context.Projects.Find(projectId);
+            if (project != null)
+            {
+                var goal = new Goal
+                {
+                    ProjectId = projectId,
+                    Name = name
+                };
+
+                _context.Goals.Add(goal);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = projectId });
+
+        }
+
+        //Create milestones
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateMilestone(int projectId, string name, DateTime date)
+        {
+            var project = _context.Projects.Find(projectId);
+            if (project != null)
+            {
+                var milestone = new Milestone
+                {
+                    ProjectId = projectId,
+                    Name = name,
+                    Date = date
+                };
+
+                _context.Milestones.Add(milestone);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Details), new { id = projectId });
+
+        }
+
         //Add comments
         [HttpPost]
         [Authorize]
@@ -117,6 +176,18 @@ namespace ProjectManagement.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
         }
 
+        public IActionResult ChangeStatus(int id)
+        {
+            var project = _context.Projects.FirstOrDefault(t => t.ProjectId == id);
+
+            if (project != null)
+            {
+                project.Status = !project.Status;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
         // GET: Projects/Create
         [Authorize]
         public IActionResult Create()
@@ -130,16 +201,15 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Models.Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders,ManagerId")] Models.Project project)
         {
-            // Pobierz użytkownika obecnie zalogowanego
             User currentUser = await _user.GetUserAsync(User);
 
             if (currentUser != null)
             {
-                // Przypisz użytkownika do projektu
                 project.Users = new List<User> { currentUser };
             }
+            project.Manager = currentUser;
             _context.Add(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
