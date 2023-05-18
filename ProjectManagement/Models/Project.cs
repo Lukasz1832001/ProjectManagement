@@ -26,9 +26,5 @@ namespace ProjectManagement.Models
         public List<User> Users { get; set; }
         public List<Goal> Goals { get; set; }
         public List<Milestone> Milestones { get; set; }
-
-        public string? ManagerId { get; set; }
-        [DisplayName("Manager")]
-        public User? Manager { get; set; }
     }
 }

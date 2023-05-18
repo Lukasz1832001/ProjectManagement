@@ -201,7 +201,7 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders,ManagerId")] Models.Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
         {
             User currentUser = await _user.GetUserAsync(User);
 
@@ -209,7 +209,6 @@ namespace ProjectManagement.Controllers
             {
                 project.Users = new List<User> { currentUser };
             }
-            project.Manager = currentUser;
             _context.Add(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

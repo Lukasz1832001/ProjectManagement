@@ -35,11 +35,6 @@ namespace ProjectManagement.Data
                 .WithMany(p => p.Comments)
                 .HasForeignKey(c => c.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
-            builder.Entity<Project>()
-                .HasOne(p => p.Manager)
-                .WithMany(c => c.Projects)
-                .HasForeignKey(p => p.ManagerId);
         }
     }
 }
