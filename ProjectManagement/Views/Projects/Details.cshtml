@@ -18,141 +18,251 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.StartDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.StartDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.EndDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.EndDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.TotalBudget)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.TotalBudget)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.ProjectScope)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ProjectScope)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Sponsor)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Sponsor)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Stakeholders)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Stakeholders)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Results)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Results)
-            </dd>
-        </dl>
-
-        <!--Goals-->
-        <div>
-            @using (Html.BeginForm("CreateGoal", "Projects"))
-            {
-                @Html.Hidden("projectId", Model.ProjectId)
-
-                <div class="form-group">
-                    @Html.TextArea("name", null, new { @class = "form-control", @required = "required" ,placeholder = "Write new goal here"})
-                    @Html.ValidationMessage("name", "", new { @class = "text-danger" })
+        <div class="row" style="margin:15px;">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Project Details</h5>
+                        <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Name</th>
+                                <td>@Html.DisplayFor(model => model.Name)</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>@Html.DisplayFor(model => model.Description)</td>
+                            </tr>
+                            <tr>
+                                <th>Start Date</th>
+                                    <td>@Model.StartDate.ToString("d")</td>
+                                </tr>
+                            <tr>
+                                <th>End Date</th>
+                                    <td>@Model.EndDate.ToString("d")</td>
+                                </tr>
+                            <tr>
+                                <th>Total Budget</th>
+                                <td>@Html.DisplayFor(model => model.TotalBudget)</td>
+                            </tr>
+                            <tr>
+                                <th>Project Scope</th>
+                                <td>@Html.DisplayFor(model => model.ProjectScope)</td>
+                            </tr>
+                            <tr>
+                                <th>Sponsor</th>
+                                <td>@Html.DisplayFor(model => model.Sponsor)</td>
+                            </tr>
+                            <tr>
+                                <th>Stakeholders</th>
+                                <td>@Html.DisplayFor(model => model.Stakeholders)</td>
+                            </tr>
+                            <tr>
+                                <th>Manager</th>
+                                    <td>
+                                        @if (ViewBag.ManagerPicture != null)
+                                        {
+                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                 src="data:image/*;base64,@(Convert.ToBase64String(ViewBag.ManagerPicture))" alt="avatar" width="40"
+                                                 height="40" />
+                                        }
+                                        else
+                                        {
+                                            <img class="rounded-circle shadow-1-strong me-3"
+                                                 src="~/defaultProfilePicture.png" alt="avatar" width="40"
+                                                 height="40" />
+                                        }
+                                        @ViewBag.ManagerFirstName &nbsp;@ViewBag.ManagerLastName
+                                    </td>
+                                </tr>
+                        </tbody>
+                    </table>
+                        @if(ViewBag.UserId == ViewBag.ManagerId)
+                        {
+                            <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                        }                       
+                    </div>
+                </div>
+                <!--Results-->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Results</h5>
+                        @if (string.IsNullOrEmpty(Model.Results))
+                        {
+                            <p>No Results</p>
+                        }
+                        else
+                        {
+                            <p>@Model.Results</p>
+                        }
+                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        {
+                            <div class="form-group mt-3">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateResultsModal"><i class="bi bi-pencil-fill mr-2"></i>Update</button>
+                            </div>
+                        }
+                        
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Add</button>
-            }
-        </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Goal
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.Goals)
-                {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                    </tr>
-                }
+                <!-- Modal Results-->
+                <div class="modal fade" id="updateResultsModal" tabindex="-1" role="dialog" aria-labelledby="updateResultsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateResultsModalLabel">Update Results</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @using (Html.BeginForm("UpdateResults", "Projects"))
+                                {
+                                    @Html.Hidden("projectId", Model.ProjectId)
+                                    <div class="form-group">
+                                        @Html.TextArea("results", Model.Results, new { @class = "form-control" })
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-save2 mr-2"></i>Save</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Goals</h5>
+                        <!-- Goals Table -->
+                        <ul class="list-group mt-3">
+                            @if (Model.Goals != null)
+                            {
+                                @foreach (var goal in Model.Goals)
+                                {
+                                    <li class="list-group-item">
+                                        <span class="font-weight-bold">@goal.Name</span>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <p>Currently no goals</p>
+                            }
+                        </ul>
+                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        {
+                            <div class="form-group mt-3">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addGoalModal"><i class="bi bi-pencil-fill mr-2"></i>Add Goal</button>
+                            </div>
+                        }
+                        
+                    </div>
+                </div>
 
-            </tbody>
-        </table>
-        <!--Milestones-->
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Milestone
-                    </th>
-                    <th>
-                        Date
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Milestones != null)
+                <!-- Modal -->
+                <div class="modal fade" id="addGoalModal" tabindex="-1" role="dialog" aria-labelledby="addGoalModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addGoalModalLabel">Add Goal</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @using (Html.BeginForm("CreateGoal", "Projects"))
+                                {
+                                    @Html.Hidden("projectId", Model.ProjectId)
+                                    <div class="form-group">
+                                        @Html.TextArea("name", null, new { @class = "form-control", @required = "required", placeholder = "Write new goal here" })
+                                        @Html.ValidationMessage("name", "", new { @class = "text-danger" })
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Add</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Milestones</h5>
+                        <!-- Milestones Table -->
+                        <ul class="list-group mt-3">
+                            @if (Model.Milestones != null)
+                            {
+                                @foreach (var milestone in Model.Milestones)
+                                {
+                                    <li class="list-group-item">
+                                        <span class="font-weight-bold">@milestone.Name</span>
+                                        <span class="float-right">@milestone.Date.ToShortDateString()</span>
+                                    </li>
+                                }
+                            }
+                            else
+                            {                              
+                                <p>Currently no milestones</p>                             
+                            }
+                        </ul>
+                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        {
+                            <div class="form-group mt-3">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMilestoneModal"><i class="bi bi-pencil-fill mr-2"></i>Add Milestone</button>
+                            </div>
+                        }
+                        
+                    </div>
+
+                </div>
+                <!-- Modal Milestones-->
+                <div class="modal fade" id="addMilestoneModal" tabindex="-1" role="dialog" aria-labelledby="addMilestoneModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addMilestoneModalLabel">Add Milestone</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @using (Html.BeginForm("CreateMilestone", "Projects"))
+                                {
+                                    @Html.Hidden("projectId", Model.ProjectId)
+                                    <div class="form-group">
+                                        @Html.TextArea("name", null, new { @class = "form-control", @required = "required", placeholder = "Write new milestone here" })
+                                        @Html.ValidationMessage("name", "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.TextBox("date", null, new { @class = "form-control datepicker", @required = "required", placeholder = "Select milestone date",@type = "date" })
+                                        @Html.ValidationMessage("date", "", new { @class = "text-danger" })
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Add</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-box-arrow-left mr-2"></i>Back</a>
+                @if (ViewBag.UserId == ViewBag.ManagerId)
                 {
-                    @foreach (var item in Model.Milestones)
-                    {
-                        <tr>
-                            <td>
-                                @item.Name
-                            </td>
-                            <td>
-                                @item.Date
-                            </td>
-                        </tr>
-                    }
+                    <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                    <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
                 }
-                else
-                {
-                    <tr>
-                        <td>
-                            No Milestones
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <div>
-            <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
-            <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-box-arrow-left mr-2"></i>Back</a> |
-            <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a> |
-            <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
+                
+            </div>
         </div>
     </div>
+
+
+
+
+
     <div class="tab-pane fade" id="nav-team" role="tabpanel" aria-labelledby="nav-team-tab">
         <!--Team-->
         <div>

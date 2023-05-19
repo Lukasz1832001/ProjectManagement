@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -80,6 +81,14 @@ namespace ProjectManagement.Controllers
             {
                 return NotFound();
             }
+            var manager = project.ProjectUsers.FirstOrDefault(pu => pu.IsManager)?.User;
+            if (manager != null)
+            {
+                ViewData["ManagerId"] = manager.Id;
+                ViewData["ManagerFirstName"] = manager.FirstName;
+                ViewData["ManagerLastName"] = manager.LastName;
+                ViewData["ManagerPicture"] = manager.Picture;
+            }
             return View(project);
         }
         //Create goals
@@ -125,6 +134,17 @@ namespace ProjectManagement.Controllers
 
             return RedirectToAction(nameof(Details), new { id = projectId });
 
+        }
+        //Add results
+        [HttpPost]
+        public ActionResult UpdateResults(int projectId, string results)
+        {
+            var project = _context.Projects.Find(projectId);
+            project.Results = results;
+            _context.SaveChanges();
+
+            // Przekierowanie na stronę z przeglądem projektu
+            return RedirectToAction(nameof(Details), new { id = projectId });
         }
 
         //Add comments
