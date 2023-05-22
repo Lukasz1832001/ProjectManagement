@@ -13,6 +13,7 @@ namespace ProjectManagement.Models
         public DateTime StartDate { get; set; }
         [DisplayName("End")]
         public DateTime EndDate { get; set; }
+        [DisplayName("Time (in hours)")]
         public int Time { get; set; }
         public bool Status { get; set; }
 

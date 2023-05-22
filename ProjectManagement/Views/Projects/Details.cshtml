@@ -23,42 +23,42 @@
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Project Details</h5>
-                        <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th>Name</th>
-                                <td>@Html.DisplayFor(model => model.Name)</td>
-                            </tr>
-                            <tr>
-                                <th>Description</th>
-                                <td>@Html.DisplayFor(model => model.Description)</td>
-                            </tr>
-                            <tr>
-                                <th>Start Date</th>
+                        <table class="table table-bordered table-responsive">
+                            <tbody>
+                                <tr>
+                                    <th>Name</th>
+                                    <td>@Html.DisplayFor(model => model.Name)</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>@Html.DisplayFor(model => model.Description)</td>
+                                </tr>
+                                <tr>
+                                    <th>Start Date</th>
                                     <td>@Model.StartDate.ToString("d")</td>
                                 </tr>
-                            <tr>
-                                <th>End Date</th>
+                                <tr>
+                                    <th>End Date</th>
                                     <td>@Model.EndDate.ToString("d")</td>
                                 </tr>
-                            <tr>
-                                <th>Total Budget</th>
-                                <td>@Html.DisplayFor(model => model.TotalBudget)</td>
-                            </tr>
-                            <tr>
-                                <th>Project Scope</th>
-                                <td>@Html.DisplayFor(model => model.ProjectScope)</td>
-                            </tr>
-                            <tr>
-                                <th>Sponsor</th>
-                                <td>@Html.DisplayFor(model => model.Sponsor)</td>
-                            </tr>
-                            <tr>
-                                <th>Stakeholders</th>
-                                <td>@Html.DisplayFor(model => model.Stakeholders)</td>
-                            </tr>
-                            <tr>
-                                <th>Manager</th>
+                                <tr>
+                                    <th>Total Budget</th>
+                                    <td>@Html.DisplayFor(model => model.TotalBudget)&nbsp;$</td>
+                                </tr>
+                                <tr>
+                                    <th>Project Scope</th>
+                                    <td>@Html.DisplayFor(model => model.ProjectScope)</td>
+                                </tr>
+                                <tr>
+                                    <th>Sponsor</th>
+                                    <td>@Html.DisplayFor(model => model.Sponsor)</td>
+                                </tr>
+                                <tr>
+                                    <th>Stakeholders</th>
+                                    <td>@Html.DisplayFor(model => model.Stakeholders)</td>
+                                </tr>
+                                <tr>
+                                    <th>Manager</th>
                                     <td>
                                         @if (ViewBag.ManagerPicture != null)
                                         {
@@ -75,12 +75,12 @@
                                         @ViewBag.ManagerFirstName &nbsp;@ViewBag.ManagerLastName
                                     </td>
                                 </tr>
-                        </tbody>
-                    </table>
-                        @if(ViewBag.UserId == ViewBag.ManagerId)
+                            </tbody>
+                        </table>
+                        @if (ViewBag.UserId == ViewBag.ManagerId)
                         {
                             <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
-                        }                       
+                        }
                     </div>
                 </div>
                 <!--Results-->
@@ -101,7 +101,7 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateResultsModal"><i class="bi bi-pencil-fill mr-2"></i>Update</button>
                             </div>
                         }
-                        
+
                     </div>
                 </div>
 
@@ -155,7 +155,7 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addGoalModal"><i class="bi bi-pencil-fill mr-2"></i>Add Goal</button>
                             </div>
                         }
-                        
+
                     </div>
                 </div>
 
@@ -200,8 +200,8 @@
                                 }
                             }
                             else
-                            {                              
-                                <p>Currently no milestones</p>                             
+                            {
+                                <p>Currently no milestones</p>
                             }
                         </ul>
                         @if (ViewBag.UserId == ViewBag.ManagerId)
@@ -210,7 +210,7 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMilestoneModal"><i class="bi bi-pencil-fill mr-2"></i>Add Milestone</button>
                             </div>
                         }
-                        
+
                     </div>
 
                 </div>
@@ -254,7 +254,7 @@
                     <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
                     <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
                 }
-                
+
             </div>
         </div>
     </div>
@@ -340,60 +340,54 @@
         <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
            asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Task</a>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        Time
-                    </th>
-                    <th>
-                        Start
-                    </th>
-                    <th>
-                        End
-                    </th>
-                    <th>
-                        User
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="row">
+            <div class="col">
+                <h2>Active</h2>
                 @foreach (var item in ViewBag.Tasks)
                 {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.Description
-                        </td>
-                        <td>
-                            @item.Time
-                        </td>
-                        <td>
-                            @item.StartDate.ToString("dd MMM yyyy")
-                        </td>
-                        <td>
-                            @item.EndDate.ToString("dd MMM yyyy")
-                        </td>
-                        <td>
-                            @item.User.UserName
-                        </td>
-                        <td>
-                            <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
-                            <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-warning"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
-                        </td>
-                    </tr>
+                    @if (item.Status == false)
+                    {
+                        <div class="card border-primary mb-3" style="width:100%;">
+                            <div class="card-header">@item.Name</div>
+                            <div class="card-body text-primary">
+                                <p class="card-text">Description: @item.Description</p>
+                                <p class="card-text">Time: @item.Time&nbsp;hour(s)</p>
+                                <p class="card-text">Start Date: @item.StartDate.ToString("dd MMM yyyy")</p>
+                                <p class="card-text">End Date: @item.EndDate.ToString("dd MMM yyyy")</p>
+                                <p class="card-text">User: @item.User.UserName</p>
+
+                                <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+
+                            </div>
+                        </div>
+                    }
+
                 }
-            </tbody>
-        </table>
+            </div>
+            <div class="col">
+                <h2>Done</h2>
+                @foreach (var item in ViewBag.Tasks)
+                {
+                    @if (item.Status == true)
+                    {
+                        <div class="card border-success mb-3" style="width:100%;">
+                            <div class="card-header">@item.Name</div>
+                            <div class="card-body text-success">
+                                <p class="card-text">Description: @item.Description</p>
+                                <p class="card-text">Time: @item.Time&nbsp;hour(s)</p>
+                                <p class="card-text">Start Date: @item.StartDate.ToString("dd MMM yyyy")</p>
+                                <p class="card-text">End Date: @item.EndDate.ToString("dd MMM yyyy")</p>
+                                <p class="card-text">User: @item.User.UserName</p>
+
+                                <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
     </div>
     <div class="tab-pane fade" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
         <!--Risk-->

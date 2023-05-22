@@ -36,7 +36,7 @@ namespace ProjectManagement.Migrations
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
-                    TotalBudget = table.Column<double>(type: "float", nullable: false),
+                    TotalBudget = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     ProjectScope = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sponsor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Stakeholders = table.Column<string>(type: "nvarchar(max)", nullable: false),

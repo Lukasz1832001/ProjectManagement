@@ -35,7 +35,7 @@ namespace ProjectManagement.Controllers
             var projects = user.ProjectUsers.Select(pu => pu.Project).ToList();
             return View(projects);
         }
-
+        [Authorize]
         public async Task<IActionResult> ArchivalProjects()
         {
             string userId = _user.GetUserId(HttpContext.User);
@@ -234,7 +234,7 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,TotalBudget,Status,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
         {
             User currentUser = await _user.GetUserAsync(User);
 
@@ -248,7 +248,6 @@ namespace ProjectManagement.Controllers
 
                 project.ProjectUsers = new List<ProjectUser> { projectUser };
             }
-
             _context.Add(project);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -276,7 +275,7 @@ namespace ProjectManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status")] Models.Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
         {
             if (id != project.ProjectId)
             {

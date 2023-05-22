@@ -56,10 +56,11 @@ namespace ProjectManagement.Controllers
         public IActionResult ChangeStatus(int id)
         {
             var task = _context.Tasks.FirstOrDefault(t => t.TaskId == id);
-
+            var user = _context.Users.FirstOrDefault(u => u.Tasks.Contains(task));
             if (task != null)
             {
                 task.Status = !task.Status;
+                user.TotalTime -= task.Time;
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -123,7 +124,7 @@ namespace ProjectManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Name,Description,StartDate,EndDate,ProjectId,UserId")] ProjectTask projectTask)
+        public async Task<IActionResult> Edit(int id, [Bind("TaskId,Name,Description,Time,StartDate,EndDate,ProjectId,UserId")] ProjectTask projectTask)
         {
             if (id != projectTask.TaskId)
             {
@@ -160,6 +161,7 @@ namespace ProjectManagement.Controllers
 
             var projectTask = await _context.Tasks
                 .Include(p => p.Project)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.TaskId == id);
             if (projectTask == null)
             {
@@ -179,6 +181,8 @@ namespace ProjectManagement.Controllers
                 return Problem("Entity set 'AppDbContext.Tasks'  is null.");
             }
             var projectTask = await _context.Tasks.FindAsync(id);
+            var user = _context.Users.FirstOrDefault(u => u.Tasks.Contains(projectTask));
+            user.TotalTime -= projectTask.Time;
             if (projectTask != null)
             {
                 _context.Tasks.Remove(projectTask);

@@ -10,10 +10,14 @@ namespace ProjectManagement.Models
         public int ProjectId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        [DisplayName("Start Date")]
         public DateTime StartDate { get; set; }
+        [DisplayName("End Date")]
         public DateTime EndDate { get; set; }
         public bool Status { get; set; }
-        public double TotalBudget { get; set; }
+        [DisplayName("Budget (in dollars)")]
+        public decimal TotalBudget { get; set; }
+        [DisplayName("Project Scope")]
         public string ProjectScope { get; set; }
         public string Sponsor { get; set; }
         public string Stakeholders { get; set; }
