@@ -9,7 +9,7 @@
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>Risk</h4>
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -52,7 +52,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="RiskId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-controller="Projects" asp-action="Details" asp-route-id="@ViewBag.ProjectId">Back</a>
+        <a asp-controller="Projects" asp-action="Details" asp-route-id="@ViewBag.ProjectId" class="btn btn-secondary"><i class="bi bi-box-arrow-left mr-2"></i>Back</a>
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</button>
     </form>
 </div>

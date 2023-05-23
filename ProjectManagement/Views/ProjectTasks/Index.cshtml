@@ -14,10 +14,10 @@
             {
                 if (item.Status == false)
                 {
-                    <div class="card" style="padding:15px;margin:15px;">
+                    <div class="card" style="padding: 15px; margin: 15px;">
                         <p class="card-text">@Html.DisplayFor(modelItem => item.Name)</p>
                         <hr class="sidebar-divider my-0">
-                        <div class="row d-flex justify-content-center" style="margin-top:15px;">
+                        <div class="row d-flex justify-content-center" style="margin-top: 15px;">
                             <div>Deadline</div>
                             <div class="date-card">
                                 <div class="day">@Html.DisplayFor(modelItem => item.EndDate.Day)</div>
@@ -28,7 +28,37 @@
                             </div>
                         </div>
                         <a asp-action="Details" asp-route-id="@item.TaskId" class="btn btn-primary" style="margin:15px;"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a>
-                        <a asp-action="ChangeStatus" asp-route-id="@item.TaskId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
+                        <button type="button" style="margin:15px;" class="btn btn-success" data-toggle="modal" data-target="#markDoneModal"><i class="bi bi-check-lg mr-2"></i>Mark as Done</button>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="markDoneModal" tabindex="-1" role="dialog" aria-labelledby="markDoneModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="markDoneModalLabel">Mark Task as Done</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to mark this task as done?</p>
+                                    <div class="form-group">
+                                        <form id="markDoneForm" method="POST" action="@Url.Action("ChangeStatus", "ProjectTasks")">
+                                            @Html.Hidden("id", item.TaskId)
+                                            <div class="form-group">
+                                                <label for="resultDescription">Result Description:</label>
+                                                <textarea class="form-control" id="resultDescription" name="result" rows="3" required></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>                                  
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 }
             }

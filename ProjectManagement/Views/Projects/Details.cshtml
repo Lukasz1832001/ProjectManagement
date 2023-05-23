@@ -1,4 +1,5 @@
-﻿@model ProjectManagement.Models.Project
+﻿@using ProjectManagement.Data.Enums;
+@model ProjectManagement.Models.Project
 
 @{
     ViewData["Title"] = "Details";
@@ -89,7 +90,7 @@
                         <h5 class="card-title">Results</h5>
                         @if (string.IsNullOrEmpty(Model.Results))
                         {
-                            <p>No Results</p>
+                            <p class="font-italic">Currently no results</p>
                         }
                         else
                         {
@@ -146,7 +147,7 @@
                             }
                             else
                             {
-                                <p>Currently no goals</p>
+                                <p class ="font-italic">Currently no goals</p>
                             }
                         </ul>
                         @if (ViewBag.UserId == ViewBag.ManagerId)
@@ -201,7 +202,7 @@
                             }
                             else
                             {
-                                <p>Currently no milestones</p>
+                                <p class="font-italic">Currently no milestones</p>
                             }
                         </ul>
                         @if (ViewBag.UserId == ViewBag.ManagerId)
@@ -252,7 +253,6 @@
                 @if (ViewBag.UserId == ViewBag.ManagerId)
                 {
                     <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
-                    <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success" style="margin:15px;"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
                 }
 
             </div>
@@ -337,24 +337,28 @@
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
-        <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
+        @if (ViewBag.UserId == ViewBag.ManagerId)
+        {
+            <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
            asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Task</a>
 
+        }     
         <div class="row">
             <div class="col">
-                <h2>Active</h2>
+                <h2 class="m-2 text-center">Active</h2>
                 @foreach (var item in ViewBag.Tasks)
                 {
                     @if (item.Status == false)
                     {
                         <div class="card border-primary mb-3" style="width:100%;">
-                            <div class="card-header">@item.Name</div>
+                            <div class="card-header bg-primary text-white font-weight-bold">@item.Name</div>
                             <div class="card-body text-primary">
-                                <p class="card-text">Description: @item.Description</p>
-                                <p class="card-text">Time: @item.Time&nbsp;hour(s)</p>
-                                <p class="card-text">Start Date: @item.StartDate.ToString("dd MMM yyyy")</p>
-                                <p class="card-text">End Date: @item.EndDate.ToString("dd MMM yyyy")</p>
-                                <p class="card-text">User: @item.User.UserName</p>
+                                <p class="card-text font-weight-bold">Description: <span class="font-weight-normal">@item.Description</span></p>
+                                <p class="card-text font-weight-bold">Time:<span class="font-weight-normal"> @item.Time&nbsp;hour(s)</span></p>
+                                <p class="card-text font-weight-bold">Start Date:<span class="font-weight-normal"> @item.StartDate.ToString("dd MMM yyyy")</span></p>
+                                <p class="card-text font-weight-bold">End Date:<span class="font-weight-normal"> @item.EndDate.ToString("dd MMM yyyy")</span></p>
+                                <p class="card-text font-weight-bold">User:<span class="font-weight-normal"> @item.User.UserName</span></p>
+
 
                                 <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
                                 <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
@@ -366,21 +370,24 @@
                 }
             </div>
             <div class="col">
-                <h2>Done</h2>
+                <h2 class="m-2 text-center">Done</h2>
                 @foreach (var item in ViewBag.Tasks)
                 {
                     @if (item.Status == true)
                     {
                         <div class="card border-success mb-3" style="width:100%;">
-                            <div class="card-header">@item.Name</div>
+                            <div class="card-header bg-success text-white font-weight-bold">@item.Name</div>
                             <div class="card-body text-success">
-                                <p class="card-text">Description: @item.Description</p>
-                                <p class="card-text">Time: @item.Time&nbsp;hour(s)</p>
-                                <p class="card-text">Start Date: @item.StartDate.ToString("dd MMM yyyy")</p>
-                                <p class="card-text">End Date: @item.EndDate.ToString("dd MMM yyyy")</p>
-                                <p class="card-text">User: @item.User.UserName</p>
+                                <p class="card-text font-weight-bold">Description: <span class="font-weight-normal">@item.Description</span></p>
+                                <p class="card-text font-weight-bold">Time:<span class="font-weight-normal"> @item.Time&nbsp;hour(s)</span></p>
+                                <p class="card-text font-weight-bold">Start Date:<span class="font-weight-normal"> @item.StartDate.ToString("dd MMM yyyy")</span></p>
+                                <p class="card-text font-weight-bold">End Date:<span class="font-weight-normal"> @item.EndDate.ToString("dd MMM yyyy")</span></p>
+                                <p class="card-text font-weight-bold">User:<span class="font-weight-normal"> @item.User.UserName</span></p>
 
-                                <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                <p class="card-text font-weight-bold">Result:
+                                    <div class="card font-weight-normal m-2 p-2">@item.Result</div>
+                                </p>
+
                                 <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
                             </div>
                         </div>
@@ -393,57 +400,65 @@
         <!--Risk-->
         <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
            asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Risk</a>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        Probability
-                    </th>
-                    <th>
-                        Influence
-                    </th>
-                    <th>
-                        Reaction
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in ViewBag.Risks)
-                {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            @item.Description
-                        </td>
-                        <td>
-                            @item.Probability
-                        </td>
-                        <td>
-                            @item.Influence
-                        </td>
-                        <td>
-                            @item.Reaction
-                        </td>
-                        <td>
-                            <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a> |
-                            <a asp-controller="Risks" asp-action="Details" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a> |
-                            <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-warning"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div>
+            @foreach (var item in ViewBag.Risks)
+            {
+                <div class="card border-warning mb-3" style="width:100%;">
+                    <div class="card-header bg-warning text-primary font-weight-bold">@item.Name</div>
+                    <div class="card-body text-primary">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-text">@item.Description</p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="card-text font-weight-bold">
+                                    Probability:
+                                    @if (@item.Probability == ImpactCategories.Low)
+                                    {
+                                        <span class="bg-success text-white p-2 rounded">@item.Probability</span>
+                                    }
+                                    else if (@item.Probability == ImpactCategories.Medium)
+                                    {
+                                        <span class="bg-warning text-white  p-2 rounded">@item.Probability</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bg-danger text-white p-2 rounded">@item.Probability</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="card-text font-weight-bold">
+                                    Influence:
+                                    @if (@item.Influence == ImpactCategories.Low)
+                                    {
+                                        <span class="bg-success text-white  p-2 rounded">@item.Influence</span>
+                                    }
+                                    else if (@item.Influence == ImpactCategories.Medium)
+                                    {
+                                        <span class="bg-warning text-white  p-2 rounded">@item.Influence</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bg-danger text-white  p-2 rounded">@item.Influence</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="col-md-2">
+                                <p class="card-text font-weight-bold">Reaction: <span class="font-weight-normal">@item.Reaction</span></p>
+                            </div>
+                            <div class="mt-2">
+                                <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            }
+        </div>     
     </div>
+
+
     <div class="tab-pane fade" id="nav-comment" role="tabpanel" aria-labelledby="nav-comment-tab">
         <!--Comment cards-->
         <div class="container">

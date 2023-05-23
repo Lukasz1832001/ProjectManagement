@@ -16,6 +16,7 @@ namespace ProjectManagement.Models
         [DisplayName("Time (in hours)")]
         public int Time { get; set; }
         public bool Status { get; set; }
+        public string? Result { get; set; }
 
         //relations
         [DisplayName("Project Name")]

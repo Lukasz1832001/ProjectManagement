@@ -53,7 +53,7 @@ namespace ProjectManagement.Controllers
 
             return View(projectTask);
         }
-        public IActionResult ChangeStatus(int id)
+        public IActionResult ChangeStatus(int id, string result)
         {
             var task = _context.Tasks.FirstOrDefault(t => t.TaskId == id);
             var user = _context.Users.FirstOrDefault(u => u.Tasks.Contains(task));
@@ -61,6 +61,7 @@ namespace ProjectManagement.Controllers
             {
                 task.Status = !task.Status;
                 user.TotalTime -= task.Time;
+                task.Result = result;
                 _context.SaveChanges();
             }
             return RedirectToAction("Index");
@@ -182,7 +183,10 @@ namespace ProjectManagement.Controllers
             }
             var projectTask = await _context.Tasks.FindAsync(id);
             var user = _context.Users.FirstOrDefault(u => u.Tasks.Contains(projectTask));
-            user.TotalTime -= projectTask.Time;
+            if (projectTask.Status == false)
+            {
+                user.TotalTime -= projectTask.Time;
+            }
             if (projectTask != null)
             {
                 _context.Tasks.Remove(projectTask);

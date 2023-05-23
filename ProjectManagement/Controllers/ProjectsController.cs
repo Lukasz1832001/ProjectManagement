@@ -209,18 +209,6 @@ namespace ProjectManagement.Controllers
             return RedirectToAction(nameof(Details), new { id = projectId });
         }
 
-        public IActionResult ChangeStatus(int id)
-        {
-            var project = _context.Projects.FirstOrDefault(t => t.ProjectId == id);
-
-            if (project != null)
-            {
-                project.Status = !project.Status;
-                _context.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
-
         // GET: Projects/Create
         [Authorize]
         public IActionResult Create()
@@ -234,7 +222,7 @@ namespace ProjectManagement.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,TotalBudget,Status,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Description,StartDate,EndDate,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
         {
             User currentUser = await _user.GetUserAsync(User);
 
@@ -275,7 +263,7 @@ namespace ProjectManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,Status,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,Name,Description,StartDate,EndDate,TotalBudget,ProjectScope,Sponsor,Stakeholders")] Models.Project project)
         {
             if (id != project.ProjectId)
             {
