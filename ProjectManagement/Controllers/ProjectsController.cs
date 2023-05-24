@@ -32,7 +32,7 @@ namespace ProjectManagement.Controllers
             string userId = _user.GetUserId(HttpContext.User);
             var user = await _context.Users.Include(u => u.ProjectUsers).ThenInclude(pu => pu.Project)
                                            .FirstOrDefaultAsync(u => u.Id == userId);
-            var projects = user.ProjectUsers.Select(pu => pu.Project).ToList();
+            var projects = user.ProjectUsers.Select(pu => pu.Project).Where(x => x.Status == false).ToList();
             return View(projects);
         }
         [Authorize]
@@ -41,8 +41,19 @@ namespace ProjectManagement.Controllers
             string userId = _user.GetUserId(HttpContext.User);
             var user = await _context.Users.Include(u => u.ProjectUsers).ThenInclude(pu => pu.Project)
                                            .FirstOrDefaultAsync(u => u.Id == userId);
-            var projects = user.ProjectUsers.Select(pu => pu.Project).ToList();
+            var projects = user.ProjectUsers.Select(pu => pu.Project).Where(x => x.Status == true).ToList();
             return View(projects);
+        }
+        public IActionResult ChangeStatus(int id)
+        {
+            var project = _context.Projects.FirstOrDefault(t => t.ProjectId == id);
+
+            if (project != null)
+            {
+                project.Status = true;
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Index");
         }
 
         // GET: Projects/Details/5
@@ -233,7 +244,7 @@ namespace ProjectManagement.Controllers
                     UserId = currentUser.Id,
                     IsManager = true
                 };
-
+                project.Status = false;
                 project.ProjectUsers = new List<ProjectUser> { projectUser };
             }
             _context.Add(project);

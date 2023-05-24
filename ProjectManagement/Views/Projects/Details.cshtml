@@ -78,7 +78,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        @if (ViewBag.UserId == ViewBag.ManagerId && Model.Status == false)
                         {
                             <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
                         }
@@ -96,7 +96,7 @@
                         {
                             <p>@Model.Results</p>
                         }
-                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        @if (ViewBag.UserId == ViewBag.ManagerId && Model.Status == false)
                         {
                             <div class="form-group mt-3">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateResultsModal"><i class="bi bi-pencil-fill mr-2"></i>Update</button>
@@ -150,7 +150,7 @@
                                 <p class ="font-italic">Currently no goals</p>
                             }
                         </ul>
-                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        @if (ViewBag.UserId == ViewBag.ManagerId && Model.Status == false)
                         {
                             <div class="form-group mt-3">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addGoalModal"><i class="bi bi-pencil-fill mr-2"></i>Add Goal</button>
@@ -205,7 +205,7 @@
                                 <p class="font-italic">Currently no milestones</p>
                             }
                         </ul>
-                        @if (ViewBag.UserId == ViewBag.ManagerId)
+                        @if (ViewBag.UserId == ViewBag.ManagerId && Model.Status == false)
                         {
                             <div class="form-group mt-3">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addMilestoneModal"><i class="bi bi-pencil-fill mr-2"></i>Add Milestone</button>
@@ -246,43 +246,68 @@
 
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-12">
                 <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-box-arrow-left mr-2"></i>Back</a>
                 @if (ViewBag.UserId == ViewBag.ManagerId)
                 {
                     <a asp-action="Delete" asp-route-id="@Model?.ProjectId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                    @if (Model.Status == false)
+                    {
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#markAsDoneModal"><i class="bi bi-check-lg mr-2"></i>Mark as Done</button>
+                    }
                 }
-
             </div>
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="markAsDoneModal" tabindex="-1" role="dialog" aria-labelledby="markAsDoneModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="markAsDoneModalLabel">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to mark this project as done?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <a asp-action="ChangeStatus" asp-route-id="@Model.ProjectId" class="btn btn-success"><i class="bi bi-check-lg mr-2"></i>Mark as Done</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
-
-
-
-
-
     <div class="tab-pane fade" id="nav-team" role="tabpanel" aria-labelledby="nav-team-tab">
         <!--Team-->
         <div>
-            <div style="margin:15px;">
-                <h3>Add user to project:</h3>
-                @using (Html.BeginForm("AddUserToProject", "Projects", FormMethod.Post))
-                {
-                    @Html.Hidden("projectId", Model.ProjectId)
+            @if (Model.Status == false)
+            {
+                <div style="margin:15px;">
+                    <h3>Add user to project:</h3>
+                    @using (Html.BeginForm("AddUserToProject", "Projects", FormMethod.Post))
+                    {
+                        @Html.Hidden("projectId", Model.ProjectId)
 
-                    <select name="userId" class="select2" style="width:50%;" required>
-                        <option value="" selected disabled>Select user</option>
-                        @foreach (var user in ViewBag.Users)
-                        {
-                            <option value="@user.Id">@user.UserName</option>
-                        }
-                    </select>
+                        <select name="userId" class="select2" style="width:50%;" required>
+                            <option value="" selected disabled>Select user</option>
+                            @foreach (var user in ViewBag.Users)
+                            {
+                                <option value="@user.Id">@user.UserName</option>
+                            }
+                        </select>
 
-                    <button class="btn btn-primary" type="submit"><i class="bi bi-person-fill-add mr-2"></i>Add</button>
-                }
-            </div>
+                        <button class="btn btn-primary" type="submit"><i class="bi bi-person-fill-add mr-2"></i>Add</button>
+                    }
+                </div>
+            }
+                
             <div class="card" style="padding:15px;">
                 <h2>Team</h2>
                 <table class="table">
@@ -337,7 +362,7 @@
     </div>
     <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
         <!--Tasks-->
-        @if (ViewBag.UserId == ViewBag.ManagerId)
+        @if (ViewBag.UserId == ViewBag.ManagerId && Model.Status == false)
         {
             <a asp-controller="ProjectTasks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
            asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Task</a>
@@ -359,10 +384,12 @@
                                 <p class="card-text font-weight-bold">End Date:<span class="font-weight-normal"> @item.EndDate.ToString("dd MMM yyyy")</span></p>
                                 <p class="card-text font-weight-bold">User:<span class="font-weight-normal"> @item.User.UserName</span></p>
 
+                                @if(Model.Status == false)
+                                {
+                                    <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                    <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
 
-                                <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
-                                <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
-
+                                }                            
                             </div>
                         </div>
                     }
@@ -387,8 +414,10 @@
                                 <p class="card-text font-weight-bold">Result:
                                     <div class="card font-weight-normal m-2 p-2">@item.Result</div>
                                 </p>
-
-                                <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                                @if (Model.Status == false)
+                                {
+                                    <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                                }
                             </div>
                         </div>
                     }
@@ -398,8 +427,11 @@
     </div>
     <div class="tab-pane fade" id="nav-risk" role="tabpanel" aria-labelledby="nav-risk-tab">
         <!--Risk-->
-        <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
+        @if (Model.Status == false)
+        {
+            <a asp-controller="Risks" asp-action="Create" asp-route-projectId="@Model.ProjectId"
            asp-route-projectName="@Model.Name" class="btn btn-primary" style="margin-bottom:15px;margin-top:15px;"><i class="bi bi-pencil-fill mr-2"></i>Create Risk</a>
+        }      
         <div>
             @foreach (var item in ViewBag.Risks)
             {
@@ -447,24 +479,27 @@
                             <div class="col-md-2">
                                 <p class="card-text font-weight-bold">Reaction: <span class="font-weight-normal">@item.Reaction</span></p>
                             </div>
-                            <div class="mt-2">
-                                <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
-                                <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
-                            </div>
+                            @if(Model.Status == false)
+                            {
+                                <div class="mt-2">
+                                    <a asp-controller="Risks" asp-action="Edit" asp-route-id="@item.RiskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
+                                    <a asp-controller="Risks" asp-action="Delete" asp-route-id="@item.RiskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
+                                </div>
+                            }                           
                         </div>  
                     </div>
                 </div>
             }
         </div>     
     </div>
-
-
     <div class="tab-pane fade" id="nav-comment" role="tabpanel" aria-labelledby="nav-comment-tab">
         <!--Comment cards-->
         <div class="container">
             <div class="row d-flex justify-content-center">
                 <div class="" style="width:100%;">
-                    <div class="card-body py-3 border-0">
+                    @if(Model.Status == false)
+                    {
+                        <div class="card-body py-3 border-0">
                         @using (Html.BeginForm("AddComment", "Projects"))
                         {
                             @Html.Hidden("projectId", Model.ProjectId)
@@ -477,7 +512,7 @@
                             <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill mr-2"></i>Comment</button>
                         }
                     </div>
-
+                    }                  
                     @foreach (var item in ViewBag.Comments)
                     {
                         <div class="card" style="margin-bottom:15px;">
@@ -506,7 +541,7 @@
                                 <p class="mt-3 mb-4 pb-2">
                                     @item.Content
                                 </p>
-                                @if (item.UserId == ViewBag.UserId)
+                                @if (item.UserId == ViewBag.UserId && Model.Status == false)
                                 {
                                     <div>
                                         @using (Html.BeginForm("DeleteComment", "Projects", new { commentId = item.CommentId }, FormMethod.Post))

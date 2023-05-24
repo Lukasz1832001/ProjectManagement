@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ProjectManagement.Models.Project>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Archival Projects</h1>
+
+<div class="container text-center">
+    <div class="row align-items-start">
+        <div class="col">
+            @foreach (var item in Model)
+            {
+                <div class="card" style="width: 100%;margin:25px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <div class="d-flex justify-content-around">
+                            <div class="row  align-items-start">
+                                <div class="col">
+                                    <div style="text">
+                                        Start
+                                    </div>
+                                    <div class="date-card">
+                                        <div class="day">@Html.DisplayFor(model => item.StartDate.Day)</div>
+                                        <div>
+                                            <div class="month">@Convert.ToDateTime(item.StartDate).ToString("MMMM")</div>
+                                            <div class="year">@Html.DisplayFor(model => item.StartDate.Year)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    End
+                                    <div class="date-card">
+                                        <div class="day">@Html.DisplayFor(model => item.EndDate.Day)</div>
+                                        <div>
+                                            <div class="month">@Convert.ToDateTime(item.EndDate).ToString("MMMM")</div>
+                                            <div class="year">@Html.DisplayFor(model => item.EndDate.Year)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                        <a asp-action="Details" asp-route-id="@item.ProjectId" class="btn btn-primary"><i class="bi bi-sign-intersection-fill mr-2"></i>Details</a>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>

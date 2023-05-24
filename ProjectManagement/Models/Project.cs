@@ -14,6 +14,7 @@ namespace ProjectManagement.Models
         public DateTime StartDate { get; set; }
         [DisplayName("End Date")]
         public DateTime EndDate { get; set; }
+        public bool Status { get; set; }
         [DisplayName("Budget (in dollars)")]
         public decimal TotalBudget { get; set; }
         [DisplayName("Project Scope")]
