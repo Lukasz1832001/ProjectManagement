@@ -384,7 +384,7 @@
                                 <p class="card-text font-weight-bold">End Date:<span class="font-weight-normal"> @item.EndDate.ToString("dd MMM yyyy")</span></p>
                                 <p class="card-text font-weight-bold">User:<span class="font-weight-normal"> @item.User.UserName</span></p>
 
-                                @if(Model.Status == false)
+                                @if (Model.Status == false && ViewBag.UserId == ViewBag.ManagerId)
                                 {
                                     <a asp-controller="ProjectTasks" asp-action="Edit" asp-route-id="@item.TaskId" class="btn btn-primary"><i class="bi bi-pencil-fill mr-2"></i>Edit</a>
                                     <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
@@ -414,7 +414,7 @@
                                 <p class="card-text font-weight-bold">Result:
                                     <div class="card font-weight-normal m-2 p-2">@item.Result</div>
                                 </p>
-                                @if (Model.Status == false)
+                                @if (Model.Status == false && ViewBag.UserId == ViewBag.ManagerId)
                                 {
                                     <a asp-controller="ProjectTasks" asp-action="Delete" asp-route-id="@item.TaskId" class="btn btn-danger"><i class="bi bi-trash-fill mr-2"></i>Delete</a>
                                 }
