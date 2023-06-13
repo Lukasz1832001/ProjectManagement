@@ -313,6 +313,7 @@ namespace ProjectManagement.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Time = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    Result = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
