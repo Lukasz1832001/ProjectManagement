@@ -3,6 +3,7 @@
 Wymagania wstępne:
  - Visual Studio 2022 lub nowszy z ASP.NET i programowaniem w sieci Web
  - .NET 7
+ - MS SQL Server Express
 
 Aplikacja wymaga zainstalowanych pakietów: 
   - "Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" 
